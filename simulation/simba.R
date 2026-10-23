@@ -1,3 +1,6 @@
+
+# Implants genus-level group differences with SIMBA (abundance scaling and prevalence shift).
+
 # Install simbaR (only when changes were made)
 # devtools::install("/projects/0/gs/danique/pipelines/simulations/SIMBA")
 

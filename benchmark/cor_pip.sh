@@ -7,6 +7,9 @@
 #SBATCH --mem=128G
 #SBATCH --array=0-6
 
+# SLURM array job that runs cor_pip.R for each dataset × feature level (ASV, genus, PICRUSt2) × reference. 
+
+
 module load 2024
 module load R/4.4.2-gfbf-2024a
 

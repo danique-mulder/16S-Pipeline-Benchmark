@@ -1,3 +1,6 @@
+
+# Combines each pipeline’s ASV table, taxonomy and sample metadata into TreeSummarizedExperiment objects
+
 .libPaths(c("/projects/0/gs/danique/rpackages", .libPaths()))
 library(mia)
 library(dplyr)

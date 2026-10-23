@@ -7,6 +7,8 @@
 #SBATCH --array=0-118
 #SBATCH --mem=224G
 
+# SLURM array job that runs PICRUSt2 on each pipeline × dataset (ASV FASTA and count table).
+
 CONDA_BASE=$(conda info --base)
 CONDA_SH="$CONDA_BASE/etc/profile.d/conda.sh"
 source $CONDA_SH 

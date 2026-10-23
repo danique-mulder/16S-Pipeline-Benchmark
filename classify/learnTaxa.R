@@ -1,4 +1,6 @@
 
+# Trains the IDTAXA classifiers (LearnTaxa) on the V4 reference sets for SILVA and Greengenes2.
+
 .libPaths(c("/projects/0/gs/danique/rpackages", .libPaths()))
 
 # Load packages

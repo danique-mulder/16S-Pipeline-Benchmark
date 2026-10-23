@@ -6,6 +6,8 @@
 #SBATCH --output=/gpfs/work2/0/gs/danique/pipelines/log/taxonomy/learnTaxa_%j.out
 #SBATCH --mem-per-cpu=500M
 
+# Prepares the V4 reference sequences and taxonomies (SILVA, Greengenes2) and submits learnTaxa.R.
+
 module load 2024
 module load R/4.4.2-gfbf-2024a
 

@@ -1,3 +1,5 @@
+# Tests beta-diversity–phenotype associations (PERMANOVA, distance ~ phenotype) for each pipeline and for the ground truth.
+
 .libPaths(c("/projects/0/gs/danique/rpackages", .libPaths()))
 library(mia)
 library(optparse)

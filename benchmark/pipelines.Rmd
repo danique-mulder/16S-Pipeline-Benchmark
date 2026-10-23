@@ -8,6 +8,11 @@ editor_options:
     wrap: 72
 ---
 
+This markdown performs the main analysis for pipeline benchmarking. 
+It summarizes combines the pipeline output into TSE or objects (or refers to scripts that do so) and
+calculates the benchmarking metrics (precision, recall, Jaccard, correlation; or refers scripts that do so) 
+
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
@@ -399,7 +404,7 @@ saveRDS(picrustoutput, file = paste0(output_path, "picrust_combined.rds"))
 ### ASV-level & Picrust-level TSEs
 ```{r tse_asv, eval=FALSE}
 
-# See scripts/asv_tse.sh 
+# See scripts/helper/asv_tse.sh 
 #  This script combines the feature tables into one using a VSEARCH dereplication (.uc) file
 # For the large datasets (mindset/gemsim this took a long time, so I put it in a separate slurm script)
 
@@ -459,9 +464,6 @@ for (lev in c("KO", "cyc")) {
     saveRDS(tse_tot, file = paste0(output_path, "tse_", lev, "_", d, "_picrust_exp_allpipelines.rds"))  
   }
 }
-
-
-
 
 ```
 

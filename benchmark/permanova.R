@@ -1,3 +1,6 @@
+# Calculates pairwise Jaccard and Aitchison distances and the MDS ordination per dataset and level, 
+# and runs PERMANOVA on the pipeline effect, including leave-one-pipeline-out.
+
 .libPaths(c("/projects/0/gs/danique/rpackages", .libPaths()))
 library(mia)
 library(optparse)

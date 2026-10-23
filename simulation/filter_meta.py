@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+
+# Keeps only the samples matching a metadata value (control participants).
+
 import argparse
 import pandas as pd
 

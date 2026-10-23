@@ -6,6 +6,8 @@
 #SBATCH --output=/gpfs/work2/0/gs/danique/pipelines/log/sim/generatereads_%A_%a.out
 #SBATCH --job-name=generatereads
 
+# SLURM array job that generates the reads for each sample: chimeras with Grinder, then sequencing errors with InSilicoSeq.
+
 # Input arguments
 sample_file=$1
 fasta=$2

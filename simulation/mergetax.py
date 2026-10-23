@@ -1,5 +1,7 @@
-
 #!/usr/bin/env python3
+
+#  Keeps only representatives that Q2-NBC and IDTAXA labelled identically down to genus.
+
 import argparse
 from Bio import SeqIO
 

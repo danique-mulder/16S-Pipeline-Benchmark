@@ -5,6 +5,8 @@
 #SBATCH --cpus-per-task=24
 #SBATCH --output=/gpfs/work2/0/gs/danique/pipelines/log/unified_asv_output_%j.out
 
+# Pools the ASVs of all pipelines for a dataset and dereplicates them with VSEARCH, so the same sequence gets the same ID across pipelines.
+
 # pipelines="AMPtk VSEARCH DADA2 Tourmaline dadasnake nfcore_ampliseq Natrix DADAist2 QIIME2 QIIME2Deblur MetaWorks APSCALE LotuS2 eDNAFlow LotuS2_otu" # NGTax
 # datasets="mock5 mock12 miseq_v4_sim novaseq_v4_sim gemsim mindset parkinson"  # mock5 mock12 miseq_v4_sim novaseq_v4_sim
 

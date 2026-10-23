@@ -5,6 +5,10 @@
 #SBATCH --cpus-per-task=1
 #SBATCH --output=/gpfs/work2/0/gs/danique/pipelines/log/simulate_output_%j.out
 
+# Parent script for the simulations. It builds the reference communities from GEMSIM controls, 
+# implants group effects, generates MiSeq and NovaSeq reads, and runs QC, primer addition and the expected PICRUSt2 profile.
+
+
 script_dir="/gpfs/work2/0/gs/danique/pipelines/scripts/simulation"
 sim_dir="/gpfs/work2/0/gs/danique/pipelines/simulations/input"
 
@@ -189,7 +193,7 @@ fi
 #######################################################################################
 
 # learnTaxa on the same reference as Q2
-# learntaxa="/projects/0/gs/danique/pipelines/scripts/learnTaxa.sh"
+# learntaxa="/projects/0/gs/danique/pipelines/scripts/classify/learnTaxa.sh"
 # sbatch $learntaxa 
 
 # Script for classifying the simulated reference sequences using q2-nbc and idtaxa 
@@ -450,12 +454,12 @@ job_id=$(sbatch --array=0-${num_samples}%16 -t 30:00 -c 24 $generate_reads ${sim
 # Check sequence length for the following sequence IDs (not simulated due to length)
 grep "shorter than read length for this ErrorModel" generatereads_15391458_*.out | awk -F':' '{print $4}' | awk -F' ' '{print $1}' | sort | uniq -c > "${sim_dir}/notsimulated_miseq.txt"
 
-QC=/projects/0/gs/danique/pipelines/scripts/qc.sh
+QC=/projects/0/gs/danique/pipelines/scripts/qc/qc.sh
 sbatch -t 01:00:00 $QC -d "miseq_sim" -i "${fastq_dir}/miseq"
 sbatch -t 01:00:00 $QC -d "novaseq_sim" -i "${fastq_dir}/novaseq"
 
 # # Add primers (needed for some of the workflows)
-ADDPRIMERS=/projects/0/gs/danique/mockrobiota/addprimers.sh
+ADDPRIMERS=/projects/0/gs/danique/pipelines/scripts/helper/addprimers.sh
 sbatch -c 1 $ADDPRIMERS "${fastq_dir}/miseq"
 sbatch -c 1 $ADDPRIMERS "${fastq_dir}/novaseq"
 

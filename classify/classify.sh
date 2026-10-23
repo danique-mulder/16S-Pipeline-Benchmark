@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#  Submits the harmonized classification (Q2-NBC and IDTAXA) for each pipeline × dataset. 
+
 # Specify pipelines and datasets to run classification on
 pipelines="NGTax2 VSEARCH AMPtk DADA2 Tourmaline dadasnake nfcore_ampliseq Natrix QIIME2 QIIME2Deblur MetaWorks APSCALE LotuS2 DADAist2 eDNAFlow" 
 datasets="mock5 mock12 gemsim mindset parkinson novaseq_v4_sim miseq_v4_sim" 

@@ -8,6 +8,8 @@ editor_options:
     wrap: 72
 ---
 
+This markdown produces the tables with benchmark metrics and manuscript figures from the outputs of pipelines.Rmd.
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```

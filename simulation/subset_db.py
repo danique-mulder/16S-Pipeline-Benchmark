@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+#  Extracts the SILVA reference sequences selected as error-free representatives.
+
 import argparse
 from Bio import SeqIO
 

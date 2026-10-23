@@ -5,6 +5,8 @@
 #SBATCH -o /projects/0/gs/danique/pipelines/log/picrust_sim%j.out
 #SBATCH -p rome
 
+#  Runs PICRUSt2 on the simulated reference sequences to get the expected functional profile.
+
 CONDA_BASE=$(conda info --base)
 CONDA_SH="$CONDA_BASE/etc/profile.d/conda.sh"
 source $CONDA_SH 

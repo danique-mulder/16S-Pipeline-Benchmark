@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Renames the GEMSIM FASTQ files to a standard naming scheme, writes a manifest that links new and old names, and submits QC.
+
 DATA_DIR="/gpfs/work2/0/gs/raw_data/gemsim/16s"
 NEW_DATA_DIR="/gpfs/work2/0/gs/danique/pipelines/data/gemsim"
 

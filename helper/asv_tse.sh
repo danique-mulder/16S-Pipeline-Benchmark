@@ -7,6 +7,8 @@
 #SBATCH --mem-per-cpu=4G
 #SBATCH --array=0-27
 
+# SLURM array job that runs unified_asv.sh (to identify identical asv sequences) and asv_tse.R (to combine into a tse) for each dataset × classifier.
+
 module load 2024
 module load R/4.4.2-gfbf-2024a
 
@@ -35,55 +37,4 @@ fi
 
 # Run the R script for this specific combination
 Rscript /projects/0/gs/danique/pipelines/scripts/helper/asv_tse.R -d ${d} -c ${c}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# #!/bin/bash
-# #SBATCH -t 15:00:00
-# #SBATCH --ntasks=1
-# #SBATCH --cpus-per-task=3
-# #SBATCH -o /projects/0/gs/danique/pipelines/log/asv_tse_%j.out
-# #SBATCH -p rome
-# #SBATCH --mem-per-cpu=3G    
-
-# module load 2024
-# module load R/4.4.2-gfbf-2024a
-
-
-
-# # datasets="gemsim parkinson"  # mock5 mock12 mindset gemsim miseq_v4_sim novaseq_v4_sim     
-# # classifiers="idtaxa" # q2 idtaxa
-
-# # sh /projects/0/gs/danique/pipelines/scripts/unified_asv.sh "${datasets}" # perform the vsearch dereplication to ensure that all uc files are present
-
-# # for d in $datasets; do
-# #     for c in $classifiers; do
-# #         echo "${d}  ${c}"
-
-# #         (
-# #             Rscript /projects/0/gs/danique/pipelines/scripts/asv_tse.R -d ${d} -c ${c}
-# #         ) &
-# #     done
-# # done
-
-# # wait
 

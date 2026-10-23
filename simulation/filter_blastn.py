@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+
+# Filters the BLAST hits of GEMSIM ASVs against filtered SILVA (≥90% identity), keeps the best hit and adds its taxonomy.
+
 import argparse
 import pandas as pd
 import matplotlib.pyplot as plt

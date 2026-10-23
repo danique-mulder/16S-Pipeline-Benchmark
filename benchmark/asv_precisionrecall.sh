@@ -5,6 +5,8 @@
 #SBATCH --cpus-per-task=32
 #SBATCH --output=/projects/0/gs/danique/pipelines/log/blast_output_%j.out
 
+## Builds BLAST databases of the expected sequences (mock references, simulated references, SILVA). 
+## It then BLASTs each pipeline’s ASVs against them to calculate ASV-level precision and recall. 
 
 ##############################################################################################
 #                                       Make blast databases                                 #

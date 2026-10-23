@@ -118,7 +118,7 @@ if [ ! -e "${REF_DIR}/SILVA_138.1_SSURef_NR99_tax_silva.fasta.gz_sintax.fasta" ]
     wget -P "${REF_DIR}/" ${SILVA}
   fi
   
-  sh $SCRIPT_DIR/silva2sintax.sh -d ${DB} 
+  sh $SCRIPT_DIR/pipelines/silva2sintax.sh -d ${DB} 
 fi
 
 ############################################################################################

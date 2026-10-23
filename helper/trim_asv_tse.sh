@@ -7,6 +7,9 @@
 #SBATCH --mem-per-cpu=4G
 #SBATCH --array=0-15
 
+# Taked trimmed ASVs from trimmed_unified_asv.sh then combines each pipeline’s (trimmed) ASV table,
+# taxonomy and sample metadata into TreeSummarizedExperiment objects.
+
 module load 2024
 module load R/4.4.2-gfbf-2024a
 

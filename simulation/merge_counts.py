@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+#  Sums the counts of ASVs that map to the same representative sequence to build the simulated count table.
+
 import argparse
 import pandas as pd
 from collections import defaultdict

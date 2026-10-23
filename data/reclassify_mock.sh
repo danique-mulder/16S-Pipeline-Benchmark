@@ -6,6 +6,8 @@
 #SBATCH --cpus-per-task=32
 #SBATCH --output=/projects/0/gs/danique/pipelines/log/blast_output_%j.out
 
+#  BLASTs mock reference sequences SILVA v138 to update the mock reference taxonomy.
+
 ##############################################################################################
 #                                       Make blast databases                                 #
 ##############################################################################################

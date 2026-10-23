@@ -5,6 +5,8 @@
 #SBATCH --cpus-per-task=1
 #SBATCH --output=/gpfs/work2/0/gs/danique/test/readsin_%j.out
 
+# Counts the input reads per sample for each dataset, used to calculate the proportion of reads each pipeline discarded.
+
 datasets="mock5 mock12 gemsim mindset parkinson miseq_v4_sim novaseq_v4_sim" 
 
 for d in $datasets; do

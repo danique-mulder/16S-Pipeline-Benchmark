@@ -5,6 +5,9 @@
 #SBATCH --cpus-per-task=1
 #SBATCH --output=/gpfs/work2/0/gs/danique/pipelines/data/remux_output_%j.out
 
+# Re-multiplexes demultiplexed reads into one R1/R2 file using artificial 8-nt barcodes, and writes the barcode file. 
+# Used for eDNAFlow.
+
 while getopts ":i:p:o:f:r:h:" opt; do
   case $opt in
     i) BASE_DIR="$OPTARG";;

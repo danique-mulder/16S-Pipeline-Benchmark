@@ -1,3 +1,6 @@
+
+# Links the observed ASVs to the expected sequences and combined into a combined TreeSummarizedExperiment object.
+
 .libPaths(c("/projects/0/gs/danique/rpackages", .libPaths()))
 library(mia)
 library(dplyr)

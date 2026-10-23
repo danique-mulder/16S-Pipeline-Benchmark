@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+
+# Keeps only the sequences present in the filtered feature table.
+
 import argparse
 from Bio import SeqIO
 

@@ -7,6 +7,8 @@
 #SBATCH --mem=64G
 #SBATCH --array=0-6
 
+# SLURM array job that runs permanova.R for each dataset × feature level × classifier.
+
 module load 2024
 module load R/4.4.2-gfbf-2024a
 

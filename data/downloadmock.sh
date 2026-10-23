@@ -2,8 +2,10 @@
 #SBATCH -p rome
 #SBATCH -t 03:00:00
 
+# Downloads the Mock 5 and Mock 12 reads, metadata and reference sequences from Mockrobiota.
+
 #Change into the mock community numbers to download 
-mock="12 20 21 22 23"
+mock="5 12"
 
 # change directory to where to download the files
 cd /gpfs/work2/0/gs/danique/mockrobiota/

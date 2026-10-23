@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Renames the MINDSet FASTQ files to a standard naming scheme, writes a manifest that links new and old names, and submits QC.
+
 DATA_DIR="/gpfs/work2/0/gs/raw_data/mindset/16s"
 NEW_DATA_DIR="/gpfs/work2/0/gs/danique/pipelines/data/mindset"
 
@@ -37,12 +39,6 @@ for file in ${DATA_DIR}/*.fastq.gz; do
 done
 
 head "${NEW_DATA_DIR}/manifest.txt"
-
-# Remultiplex sequences
-REMUX="/gpfs/work2/0/gs/danique/pipelines/data/remux.sh" 
-
-sbatch $REMUX -i "${NEW_DATA_DIR}" -p "${NEW_DATA_DIR}/seq" -f "GTGCCAGCMGCCGCGGTAA" -r "GGACTACHVGGGTWTCTAAT"
-mv "${NEW_DATA_DIR}/seq/barcodes.txt" ${NEW_DATA_DIR}/barcodes.txt
 
 QC=/projects/0/gs/danique/pipelines/scripts/qc/qc.sh
 sbatch -t 01:00:00 $QC -d "mindset" -i "${NEW_DATA_DIR}/seq"

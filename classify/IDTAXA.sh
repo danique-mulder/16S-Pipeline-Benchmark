@@ -5,11 +5,13 @@
 #SBATCH --cpus-per-task=16
 #SBATCH --output=/gpfs/work2/0/gs/danique/pipelines/log/taxonomy/IDTAXA_output_%j.out
 
+# Classifies a pipeline’s ASVs with IDTAXA against the V4-trained SILVA and Greengenes2 databases.
+
 ############################################################################################
 #                              Pipeline configuration                                      #
 ############################################################################################
 
-IDTAXA="/gpfs/work2/0/gs/danique/pipelines/scripts/IDTAXA.R"
+IDTAXA="/gpfs/work2/0/gs/danique/pipelines/scripts/classify/IDTAXA.R"
 SILVA="https://www2.decipher.codes/data/Downloads/TrainingSets/SILVA_SSU_r138_2_2024.RData"
 SILVA_NAME=$(basename $SILVA)
 

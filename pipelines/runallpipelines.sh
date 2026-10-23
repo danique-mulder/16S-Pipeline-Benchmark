@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Submits all pipeline scripts for a dataset with the same input, primers and truncation settings, and logs the job IDs.
+
 SCRIPT_DIR="/gpfs/work2/0/gs/danique/pipelines/scripts/pipelines"
 LOG_DIR="/gpfs/work2/0/gs/danique/pipelines/log"
 cd "$SCRIPT_DIR"
@@ -59,14 +61,14 @@ run_pipelines() {
         ["NGTax2.sh"]="-i ${DATA_DIR} -a ${PRIMER_ATTACHED} -s ${SEPARATOR} -y ${REMOVEOLD}"
         ["nfcore_ampliseq.sh"]="-i ${DATA_DIR} -a ${PRIMER_ATTACHED} -s ${SEPARATOR} -y ${REMOVEOLD}"
         ["Natrix.sh"]="-i ${DATA_DIR} -a ${PRIMER_ATTACHED} -c asv -y ${REMOVEOLD} -g ${THREADS}" 
-        ["Natrix.sh"]="-i ${DATA_DIR} -a ${PRIMER_ATTACHED} -c otu -y ${REMOVEOLD} -g ${THREADS}"
+        # ["Natrix.sh"]="-i ${DATA_DIR} -a ${PRIMER_ATTACHED} -c otu -y ${REMOVEOLD} -g ${THREADS}"
         ["DADAist2.sh"]="-i ${DATA_DIR} -a ${PRIMER_ATTACHED} -t ${TRUNC_F} -u ${TRUNC_R} -y ${REMOVEOLD}"
         ["QIIME2.sh"]="-i ${DATA_DIR} -a ${PRIMER_ATTACHED} -t ${TRUNC_F} -u ${TRUNC_R} -y ${REMOVEOLD}"
         ["QIIME2_deblur.sh"]="-i ${DATA_DIR} -a ${PRIMER_ATTACHED} -y ${REMOVEOLD}"
         ["MetaWorks.sh"]="-i ${DATA_DIR_PRIMER} -p ${REVCOMP} -a 1 -t ${TRUNC_F} -u ${TRUNC_R} -y ${REMOVEOLD}"
         ["APSCALE.sh"]="-i ${DATA_DIR_PRIMER} -a 1 -y ${REMOVEOLD}"
         ["LotuS2.sh"]="-i ${DATA_DIR_PRIMER} -a 1 -m ${MACHINE} -l ${SEQUENCING_RUN} -c asv" 
-        ["LotuS2.sh"]="-i ${DATA_DIR_PRIMER} -a 1 -m ${MACHINE} -l ${SEQUENCING_RUN} -c otu"
+        # ["LotuS2.sh"]="-i ${DATA_DIR_PRIMER} -a 1 -m ${MACHINE} -l ${SEQUENCING_RUN} -c otu"
         ["eDNAFlow.sh"]="-i ${DATA_DIR_REMUX} -b ${BARCODEFILE} -y 0 -g ${THREADS}"
     )
 
@@ -76,7 +78,7 @@ run_pipelines() {
     # Loop over the pipelines
     for script in "${!pipelines[@]}"; do
         # Assign runtime based on the script
-        if [[ "$script" == "OBITOOLS.sh" || "$script" == "eDNAFlow.sh" || "$script" == "AMPtk.sh" ]]; then
+        if [[ "$script" == "eDNAFlow.sh" || "$script" == "AMPtk.sh" ]]; then
             RUNTIME=$RUN_LONG
         else
             RUNTIME=$RUN_SHORT

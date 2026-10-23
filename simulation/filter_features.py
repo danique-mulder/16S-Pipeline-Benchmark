@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+
+# Subsets the feature table to the samples kept in the metadata.
+
 import argparse
 import pandas as pd
 

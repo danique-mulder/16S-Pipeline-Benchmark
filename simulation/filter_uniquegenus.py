@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+
+#  Keeps only representatives with a single, unambiguous genus.
+
 import argparse
 import pandas as pd
 from Bio import SeqIO

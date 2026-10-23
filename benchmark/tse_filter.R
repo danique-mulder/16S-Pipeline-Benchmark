@@ -1,3 +1,6 @@
+# Applies the ASV-level filters (prevalence, total count, minimum and maximum length) 
+# and recalculates Jaccard similarity and correlations after each filtering step.
+
 .libPaths(c("/projects/0/gs/danique/rpackages", .libPaths()))
 library(mia)
 library(optparse)

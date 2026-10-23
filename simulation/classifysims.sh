@@ -5,6 +5,8 @@
 #SBATCH --cpus-per-task=24
 #SBATCH --output=/gpfs/work2/0/gs/danique/pipelines/log/taxonomy/classify_mock_%j.out
 
+# Classifies the representative sequences (to simulate) with Q2-NBC and IDTAXA.
+
 while getopts ":c:d:" opt; do
   case $opt in
     c) CLASSIFIER="$OPTARG";;

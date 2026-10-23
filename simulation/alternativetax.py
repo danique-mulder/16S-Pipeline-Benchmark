@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+
+# Lists every genus that each representative could be assigned to, based on the BLAST results.
+
 import argparse
 import re
 from collections import defaultdict

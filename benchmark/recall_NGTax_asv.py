@@ -48,7 +48,7 @@ def parse_blast(path):
 
 def main():
     if len(sys.argv) != 3:
-        print("Usage: python pair_NGTax_asv.py forward.tsv reverse.tsv")
+        print("Usage: python recall_NGTax_asv.py forward.tsv reverse.tsv")
         sys.exit(1)
 
     fwd_file = sys.argv[1]

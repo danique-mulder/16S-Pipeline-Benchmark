@@ -6,6 +6,8 @@
 #SBATCH --output=/gpfs/work2/0/gs/danique/pipelines/log/tse_exp_output_%j.out
 #SBATCH --mem=200G
 
+# Submits tse_exp.R for each dataset that has a ground truth.
+
 R_LIBS=/projects/0/gs/danique/rpackages:$R_LIBS
 export R_LIBS
 

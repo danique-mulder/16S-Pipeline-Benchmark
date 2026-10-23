@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+# Removes SILVA V4 sequences that are identical but have different genus labels, or that have vague labels (uncultured, unknown).
+
 import argparse
 from collections import defaultdict
 from Bio import SeqIO

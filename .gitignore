@@ -1,0 +1,19 @@
+# ignore everything
+*
+
+# keep subfolders
+!*/
+
+# keep only bash, R and python scripts
+!*.sh
+!*.R
+!*.py
+
+# Keep readme
+!README.md 
+
+# Keep RMarkdown
+!*.Rmd
+
+# keep the .gitignore itself
+!.gitignore

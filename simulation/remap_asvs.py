@@ -1,3 +1,6 @@
+
+# Map ASVs that were lost during prior steps to the best fitting representative sequence (SILVA ID) based on BLAST results and taxonomy
+
 import pandas as pd
 import argparse
 

@@ -1,3 +1,6 @@
+
+# Combines the PICRUSt2 KO and MetaCyc tables of all pipelines into TreeSummarizedExperiment objects.
+
 .libPaths(c("/projects/0/gs/danique/rpackages", .libPaths()))
 library(mia)
 library(dplyr)

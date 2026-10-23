@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Summarizes the ASV sequence lengths per pipeline and dataset (count, min, max, mean, median).
+
 pipelines="AMPtk VSEARCH Tourmaline DADA2 dadasnake NGTax2 nfcore_ampliseq Natrix DADAist2 QIIME2 MetaWorks APSCALE LotuS2 eDNAFlow LotuS2_otu QIIME2Deblur"
 datasets="mock5 mock12 gemsim mindset miseq_v4_sim novaseq_v4_sim parkinson"  
 

@@ -1,3 +1,6 @@
+
+# Runs the DECIPHER IDTAXA classification on a FASTA file and writes a taxonomy table.
+
 # Load packages
 if(!requireNamespace("BiocManager", quietly = TRUE)) {
   install.packages(c('BiocManager'), quiet = TRUE, update = FALSE, ask = FALSE)

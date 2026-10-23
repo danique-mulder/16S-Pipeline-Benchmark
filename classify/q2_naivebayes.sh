@@ -6,6 +6,8 @@
 #SBATCH --mem=64G
 #SBATCH --output=/gpfs/work2/0/gs/danique/pipelines/log/taxonomy/q2_naive_output_%j.out
 
+# Classifies a pipeline’s ASVs with Q2 Naive Bayes against the V4-trained SILVA and Greengenes2 databases.
+
 ############################################################################################
 #                              Pipeline configuration                                      #
 ############################################################################################

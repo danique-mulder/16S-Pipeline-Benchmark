@@ -6,6 +6,8 @@
 #SBATCH --output=/gpfs/work2/0/gs/danique/pipelines/log/qc_output_%j.out
 #SBATCH --mem=48G
 
+# Runs FastQC on all reads of a dataset and summarizes the forward and reverse reads with MultiQC.
+
 if [ -z "$SLURM_CPUS_PER_TASK" ]; then
   THREADS=1 
 else

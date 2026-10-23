@@ -1,3 +1,6 @@
+# Calculates abundance correlations between pipelines and against the expected community, 
+# for both the union and the intersection sets.
+
 .libPaths(c("/projects/0/gs/danique/rpackages", .libPaths()))
 library(mia, quietly=TRUE)
 library(optparse, quietly=TRUE)

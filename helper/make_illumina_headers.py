@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+
+# Rewrites FASTQ headers in Illumina format, so Natrix accepts the simulated reads in OTU mode.
+
 import sys
 import gzip
 
