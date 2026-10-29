@@ -18,7 +18,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 # Load libraries
-```{r loadlib, echo=TRUE}
+```{r loadlib, echo=TRUE, include=FALSE}
 
 .libPaths(c("/projects/0/gs/danique/rpackages", .libPaths()))
 
@@ -46,58 +46,65 @@ loaded <- FALSE
 loaded <- sapply(pkg, require, character.only = TRUE)
 print(as.matrix(loaded))
 
-# Set paths
-output_base_path <- "/projects/0/gs/danique/pipelines/pipelines/"
-recall_base_path <- "/projects/0/gs/danique/pipelines/recall/recall_"
-precision_base_path <- "/projects/0/gs/danique/pipelines/precision/precision_"
+prj_dir <- "/projects/0/gs/danique"
+pip_dir <- "/projects/0/gs/danique/pipelines"
+sim_dir <- "/projects/0/gs/danique/pipelines/simulations/input/"
 
-read_length <- "/projects/0/gs/danique/pipelines/int_results/seq_length_summary.tsv"
-read_length_all <- "/projects/0/gs/danique/pipelines/int_results/seq_length.tsv"
-output_path <- "/projects/0/gs/danique/pipelines/int_results/routput/"
-plot_path <- "/projects/0/gs/danique/pipelines/int_results/figures/"
-algorithms <- "/projects/0/gs/danique/pipelines/int_results/metadata/algorithms.tsv"
+# Set paths
+output_base_path <- file.path(pip_dir, "pipelines/")
+recall_base_path <- file.path(pip_dir,"recall/recall_")
+precision_base_path <- file.path(pip_dir,"precision/precision_")
+
+output_path <- file.path(pip_dir,"int_results/routput/")
+plot_path <- file.path(pip_dir,"int_results/figures/")
+
+```
+
+```{r set_paths, echo=TRUE}
+
+read_length <- file.path(pip_dir,"int_results/seq_length_summary.tsv")
+read_length_all <- file.path(pip_dir,"int_results/seq_length.tsv")
+algorithms <- file.path(pip_dir,"int_results/metadata/algorithms.tsv")
 
 datasets <- data.frame(datasets = c("mock5", "mock12", "miseq_v4_sim", "novaseq_v4_sim", "gemsim", "mindset", "parkinson"),
-                       raw = c("/gpfs/work2/0/gs/danique/mockrobiota/mock5/fastq_demux",
-                               "/gpfs/work2/0/gs/danique/mockrobiota/mock12/fastq_demux",
-                               "/gpfs/work2/0/gs/danique/pipelines/simulations/input/fastq/miseq",
-                               "/gpfs/work2/0/gs/danique/pipelines/simulations/input/fastq/novaseq",
-                               "/gpfs/work2/0/gs/danique/pipelines/data/gemsim/seq",
-                               "/gpfs/work2/0/gs/danique/pipelines/data/mindset/seq",
-                               "/gpfs/work2/0/gs/danique/pipelines/data/parkinson/seq"),
-                       tax = c("/projects/0/gs/danique/mockrobiota/mock5/info/silva138-expected-taxonomy.tsv",
-                               "/projects/0/gs/danique/mockrobiota/mock12/info/silva138-expected-taxonomy.tsv",
-                               "/projects/0/gs/danique/pipelines/simulations/input/taxonomy.tsv",
-                                "/projects/0/gs/danique/pipelines/simulations/input/taxonomy.tsv",
-                                NA,
-                                NA,
-                                NA),
-                      comp = c("/projects/0/gs/danique/mockrobiota/mock5/info/taxonomy.tsv",
-                               "/projects/0/gs/danique/mockrobiota/mock12/info/taxonomy.tsv",
-                               "/projects/0/gs/danique/pipelines/simulations/input/implanted_counts.tsv",
-                               "/projects/0/gs/danique/pipelines/simulations/input/implanted_counts.tsv",
+                       raw = c(file.path(prj_dir, "mockrobiota/mock5/fastq_demux"),
+                               file.path(prj_dir, "mockrobiota/mock12/fastq_demux"),
+                               file.path(pip_dir, "simulations/input/fastq/miseq"),
+                               file.path(pip_dir, "simulations/input/fastq/novaseq"),
+                               file.path(pip_dir, "data/gemsim/seq"),
+                               file.path(pip_dir, "data/mindset/seq"),
+                               file.path(pip_dir, "data/parkinson/seq")),
+                       tax = c(file.path(prj_dir, "mockrobiota/mock5/info/silva138-expected-taxonomy.tsv"),
+                               file.path(prj_dir, "mockrobiota/mock12/info/silva138-expected-taxonomy.tsv"),
+                               file.path(pip_dir, "simulations/input/taxonomy.tsv"),
+                               file.path(pip_dir, "simulations/input/taxonomy.tsv"),
                                NA,
                                NA,
                                NA),
-                      meta = c(NA,
+                       comp = c(file.path(prj_dir, "mockrobiota/mock5/info/taxonomy.tsv"),
+                                file.path(prj_dir, "mockrobiota/mock12/info/taxonomy.tsv"),
+                                file.path(pip_dir, "simulations/input/implanted_counts.tsv"),
+                                file.path(pip_dir, "simulations/input/implanted_counts.tsv"),
+                                NA,
+                                NA,
+                                NA),
+                       meta = c(NA,
+                                NA,
+                                file.path(pip_dir, "int_results/metadata/implanted_meta.tsv"),
+                                file.path(pip_dir, "int_results/metadata/implanted_meta.tsv"),
+                                file.path(pip_dir, "int_results/metadata/gemsim.tsv"),
+                                file.path(pip_dir, "int_results/metadata/mindset.tsv"),
+                                file.path(pip_dir, "int_results/metadata/parkinson.tsv")),
+                       exp = c(NA,
                                NA,
-                               "/projects/0/gs/danique/pipelines/int_results/metadata/implanted_meta.tsv",
-                               "/projects/0/gs/danique/pipelines/int_results/metadata/implanted_meta.tsv",
-                               "/projects/0/gs/danique/pipelines/int_results/metadata/gemsim.tsv",
-                               "/projects/0/gs/danique/pipelines/int_results/metadata/mindset.tsv",
-                               "/projects/0/gs/danique/pipelines/int_results/metadata/parkinson.tsv"),
-                      exp = c(NA,
-                              NA,
-                              "/projects/0/gs/danique/pipelines/int_results/metadata/expected_associations.tsv",
-                              "/projects/0/gs/danique/pipelines/int_results/metadata/expected_associations.tsv",
-                              NA,
-                              NA,
-                              NA))                              
+                               file.path(pip_dir, "int_results/metadata/expected_associations.tsv"),
+                               file.path(pip_dir, "int_results/metadata/expected_associations.tsv"),
+                               NA,
+                               NA,
+                               NA))
 
 datasets$reads_in <- paste0(output_path, datasets$datasets, ".tsv")
 
-# pipelines <- c("AMPtk","VSEARCH", "DADA2", "Tourmaline","dadasnake","nfcore_ampliseq", 
-#                "Natrix","DADAist2","QIIME2","MetaWorks","APSCALE","LotuS2","eDNAFlow", "NGTax2", "Natrix_otu", "LotuS2_otu")
 pipelines <- c("Expected", "NGTax2", "eDNAFlow", "MetaWorks", "VSEARCH", "APSCALE", "QIIME2Deblur", "AMPtk", "LotuS2", "Natrix", "DADAist2", "dadasnake", 
         "nfcore_ampliseq", "QIIME2", "Tourmaline", "DADA2", "LotuS2_otu")
 
@@ -127,6 +134,37 @@ mocks <- c("mock5", "mock12")
 sims <- c("miseq_v4_sim", "novaseq_v4_sim")
 reals <- c("gemsim", "mindset", "parkinson")
 
+get_list_names <- function(x) {
+  is_list <- function(z) is.list(z) && !is.data.frame(z)
+
+  res <- list()
+  current <- list(x)
+  level <- 1
+
+  while (length(current) > 0) {
+    lvl_names <- character(0)
+    next_level <- list()
+
+    for (el in current) {
+      n <- names(el)
+      if (is.null(n)) n <- rep("", length(el))
+      for (i in seq_along(el)) {
+        if (n[i] != "") lvl_names <- c(lvl_names, n[i])
+        if (is_list(el[[i]])) next_level <- c(next_level, list(el[[i]]))
+      }
+    }
+
+    if (length(lvl_names) > 0) res[[paste0("level_", level)]] <- unique(lvl_names)
+    current <- next_level
+    level <- level + 1
+  }
+  res
+}
+
+```
+
+```{r setfigures, eval=TRUE}
+
 # Set colors
 cols_p <- setNames(scales::hue_pal()(length(pipelines)), pipelines[-1])
 cols_p <- c("Expected" = "#A6A6A6", cols_p)
@@ -134,7 +172,7 @@ cols_p <- c("Expected" = "#A6A6A6", cols_p)
 cols_d <- setNames(c("#5eb8e8ff", "#1F78B4",
             "#a7e09bff", "#33A02C",
             "#FB9A99","#e16e70ff", "#E31A1C"), datasets$datasets)
-# cols_cs <- c("#5eb8e8ff", "#e16e70ff", "#72bf6cff")
+
 cols_cs <- c("#131515", "#0F828C", "#F6AE2D")
 names(cols_cs) <- c("def", "q2", "idtaxa")
 
@@ -172,7 +210,7 @@ titles_d <- c(mock5 = "Mock 5",
 
 # Combine output
 ## All tables into a list
-```{r alloutput, eval=FALSE}
+```{r alloutput, eval=FALSE, include=TRUE}
 
 alloutput <- list()
 meta <- read_tsv(file = datasets$meta[datasets$datasets %in% "parkinson"], col_names = TRUE)
@@ -327,10 +365,13 @@ for (d in c("mock5", "mock12")) {
 
 saveRDS(alloutput, file = paste0(output_path, "all_tables_combined.rds"))
 
+# Published the anonymized version: pipeline_output.RData <- alloutput 
+
 ```
 
+
 ## Picrust tables into list
-```{r picrust2, eval=FALSE}
+```{r picrust2, eval=FALSE, include=TRUE}
 
 picrustoutput <- list()
 meta <- read_tsv(file = datasets$meta[datasets$datasets %in% "parkinson"], col_names = TRUE)
@@ -402,7 +443,7 @@ saveRDS(picrustoutput, file = paste0(output_path, "picrust_combined.rds"))
 
 ## Create TSEs
 ### ASV-level & Picrust-level TSEs
-```{r tse_asv, eval=FALSE}
+```{r tse_asv, eval=FALSE, include=TRUE}
 
 # See scripts/helper/asv_tse.sh 
 #  This script combines the feature tables into one using a VSEARCH dereplication (.uc) file
@@ -469,7 +510,7 @@ for (lev in c("KO", "cyc")) {
 
 ### Genus-level TSEs
 Including TSE for expected communities
-```{r tse_genus, eval=FALSE}
+```{r tse_genus, eval=FALSE, include=TRUE}
 
 #  Combine all tables into one (genus level for now)
 alloutput <- readRDS(file = paste0(output_path, "all_tables_combined.rds"))
@@ -866,7 +907,7 @@ for (d in datasets$datasets) {
 ```
 
 ### Label TPs and FPs in TSE 
-```{r label_tp, eval=FALSE}
+```{r label_tp, eval=FALSE, include=TRUE}
 
 alloutput <- readRDS(file = paste0(output_path, "all_tables_combined.rds"))
 
@@ -953,7 +994,7 @@ for (d in datasets$datasets[!datasets$datasets %in% reals]) {
 ```
 
 ### Label TPs and FNs in TSE 
-```{r label_fn, eval=FALSE}
+```{r label_fn, eval=FALSE, include=TRUE}
 
 alloutput <- readRDS(file = paste0(output_path, "all_tables_combined.rds"))
 gen_fn <- list()
@@ -1032,7 +1073,7 @@ for (d in datasets$datasets[!datasets$datasets %in% reals]) {
 > Feature table sparsity (%0)
 > Percentage of features/sequences assigned to different taxonomic levels
 
-```{r basic_stats, eval=FALSE}
+```{r basic_stats, eval=FALSE, include=TRUE}
 
 alloutput <- readRDS(file = paste0(output_path, "all_tables_combined.rds"))
 
@@ -1248,7 +1289,7 @@ saveRDS(stats_dataset, file = paste0(output_path, "stats_dataset.rds"))
 
 ### Average abundance
 Extracting the range of average abundances 
-```{r ave_ab, eval=FALSE}
+```{r ave_ab, eval=FALSE, include=TRUE}
 
 # ASV level
 df <- list()
@@ -1358,9 +1399,8 @@ saveRDS(df, file = paste0(output_path, "abundance_distributions.rds"))
 
 ```
 
-
 ### Average False Negative abundance
-```{r ave_ab_fn, eval=FALSE}
+```{r ave_ab_fn, eval=FALSE, include=TRUE}
 
 df_list <- list()
 df_all <- data.frame(pipeline = character(), dataset = character(), ab = numeric(), prev = numeric(), tp = character())
@@ -1431,7 +1471,7 @@ saveRDS(df_list, file = paste0(output_path, "abundance_distributions_fn.rds"))
 > Number of KOs
 > Number of MetaCyc pathways
 
-```{r stats_picrust, eval=FALSE}
+```{r stats_picrust, eval=FALSE, include=TRUE}
 
 stats_sample <- readRDS(file = paste0(output_path, "stats_sample.rds"))
 stats_dataset <- readRDS(file = paste0(output_path, "stats_dataset.rds"))
@@ -1491,7 +1531,7 @@ saveRDS(stats_dataset, file = paste0(output_path, "stats_dataset_picrust.rds"))
 Recall reflects the proportion of sequences that were correctly
 identified by a pipeline among all true sequences (TP/(TP + FN)).
 
-```{r recall_seq, eval=FALSE}
+```{r recall_seq, eval=FALSE, include=TRUE}
 
 alloutput <- readRDS(file = paste0(output_path, "all_tables_combined.rds"))
 stats_dataset <- readRDS(file = paste0(output_path, "stats_dataset_picrust.rds"))
@@ -1585,16 +1625,15 @@ for (d in c(mocks, sims)) {
 saveRDS(stats_dataset, file = paste0(output_path, "stats_dataset_picrust_wrecall.rds"))
 saveRDS(stats_sample, file = paste0(output_path, "stats_sample_picrust_wrecall.rds"))
 
-
 ```
 
 ### ASV-level Precision
 Precision reflects the proportion of true positives among all positives
 (TP/(TP+FP))
 
-```{r precision_seq, eval=FALSE}
+```{r precision_seq, eval=FALSE, include=TRUE}
 
-# alloutput <- readRDS(file = paste0(output_path, "all_tables_combined.rds"))
+alloutput <- readRDS(file = paste0(output_path, "all_tables_combined.rds"))
 stats_dataset <- readRDS(file = paste0(output_path, "stats_dataset_picrust_wrecall.rds"))
 stats_sample <- readRDS(file = paste0(output_path, "stats_sample_picrust_wrecall.rds"))
 
@@ -1604,8 +1643,7 @@ for (d in datasets$datasets[!datasets$datasets %in% reals]) {
                              precisionrate = numeric(),
                              precisionrate_1mm = numeric(),
                              asv_tp = numeric(),
-                             asv_1mm = numeric(),
-                             asv_silva0 = numeric())
+                             asv_1mm = numeric())
 
   tse_exp <- readRDS(file = paste0(output_path, "tse_exp_", d, ".rds")) 
 
@@ -1620,9 +1658,8 @@ for (d in datasets$datasets[!datasets$datasets %in% reals]) {
     precisionrate_1mm <- sum(precision$reference %in% "Reference" & (precision$mismatch == 0 | precision$mismatch == 1)) / nrow(precision)
     asv_tp <- sum(precision$reference %in% "Reference" & precision$mismatch == 0)
     avs_1mm <- asv_tp + sum(precision$reference %in% "Reference" & precision$mismatch == 1)
-    asv_silva0 <- sum(precision$reference %in% "Silva" & precision$mismatch == 0)
 
-    precision_tmp <- data.frame(pipeline=p, precisionrate=precisionrate, precisionrate_1mm=precisionrate_1mm, asv_tp=asv_tp, asv_1mm = avs_1mm, asv_silva0 = asv_silva0)
+    precision_tmp <- data.frame(pipeline=p, precisionrate=precisionrate, precisionrate_1mm=precisionrate_1mm, asv_tp=asv_tp, asv_1mm = avs_1mm)
     precision_df <- precision_df %>% dplyr::add_row(precision_tmp)
 
     #####################  Per sample ########################################### 
@@ -1690,9 +1727,9 @@ for (d in datasets$datasets[!datasets$datasets %in% reals]) {
 ### Genus-level recall and precision
 For both classifiers (q2 and idtaxa) using silva reference
 
-```{r recall_seq_g, eval=FALSE}
+```{r recall_seq_g, eval=FALSE,include=TRUE}
 
-# alloutput <- readRDS(file = paste0(output_path, "all_tables_combined.rds"))
+alloutput <- readRDS(file = paste0(output_path, "all_tables_combined.rds"))
 stats_dataset <- readRDS(file = paste0(output_path, "stats_dataset_picrust_wrecall_wprecision.rds"))
 stats_sample <- readRDS(file = paste0(output_path, "stats_sample_picrust_wrecall_wprecision.rds"))
 
@@ -1807,8 +1844,8 @@ for (d in datasets$datasets[!datasets$datasets %in% reals]) {
 
 # Compile stats for later reference
 FP_stats <- list(tp_mat = TP_mat, FP = FPs, FN = FNs, TP = TPs)
-saveRDS(FP_stats, file = paste0(output_path, "FP_stats_pipelines_datasets.rds"))
 
+saveRDS(FP_stats, file = paste0(output_path, "FP_stats_pipelines_datasets.rds"))
 saveRDS(stats_dataset, file = paste0(output_path, "stats_dataset_picrust_wrecall_wprecision_genus.rds"))
 saveRDS(stats_sample, file = paste0(output_path, "stats_sample_picrust_wrecall_wprecision_genus.rds"))
 
@@ -1819,7 +1856,7 @@ NGTax seemed to have relatively low precision relative to other pipelines.
 Given differences in the way NGTax outputs sequences (2*7-bp unmerged) we calculated recall/precision with the defautl classifier.
 This was meant to rule out large differences in q2/idtaxa estimated preformance vs. default classifier performance
 
-```{r recall_ngtax, eval=FALSE}
+```{r recall_ngtax, eval=FALSE, include=TRUE}
 
 stats_dataset <- readRDS(file = paste0(output_path, "stats_dataset_picrust_wrecall_wprecision_genus.rds"))
 stats_dataset <- readRDS(file = paste0(output_path, "stats_dataset_wrecall_wprecision_genus.rds"))
@@ -1956,7 +1993,7 @@ ggsave(paste0(plot_path, "SFigure_recall_ngtax.pdf"),
 ### Read-weighted precision
 The %TP reads / total observed
 Both ASV-level and Genus-level
-```{r perc_tp, eval=FALSE}
+```{r perc_tp, eval=FALSE,include=TRUE}
 
 stats_dataset <- readRDS(file = paste0(output_path, "stats_dataset_picrust_wrecall_wprecision_genus.rds"))
 
@@ -2048,7 +2085,7 @@ saveRDS(stats_dataset, file = paste0(output_path, "stats_dataset_picrust_wrecall
 The %TP abundance / total expected abundance (total = 1)
 Both ASV-level and Genus-level
 
-```{r fn, eval=FALSE}
+```{r fn, eval=FALSE,include=TRUE}
 
 stats_dataset <- readRDS(file = paste0(output_path, "stats_dataset_picrust_wrecall_wprecision_genus_perctp.rds"))
 
@@ -2121,7 +2158,7 @@ saveRDS(stats_dataset, file = paste0(output_path, "stats_dataset_picrust_wrecall
 ### Picrust-level recall and precision picrust 
 Both KO and MetaCyc pathways 
 
-```{r recall_precision_picrust, eval=FALSE}
+```{r recall_precision_picrust, eval=FALSE,include=TRUE}
 
 stats_dataset <- readRDS(file = paste0(output_path, "stats_dataset_picrust_wrecall_wprecision_genus_perctpfp.rds"))
 stats_sample <- readRDS(file = paste0(output_path, "stats_sample_picrust_wrecall_wprecision_genus.rds"))
@@ -2182,7 +2219,7 @@ for (lev in c("KO", "cyc")) {
 
   }
 }
-f
+
 saveRDS(stats_dataset, file = paste0(output_path, "stats_dataset_picrust_wrecall_wprecision_genus_perctpfp_picrustrecall.rds"))
 saveRDS(stats_sample, file = paste0(output_path, "stats_sample_picrust_wrecall_wprecision_genus_picrustrecall.rds"))
 
@@ -2193,19 +2230,18 @@ The main outcome metric to quantify similarity in real communities (consensus) i
 As an additional metric Aitchison Distance is also calculated to quantify abundance-weighted distance
 
 ### Pairwise distance
-Pairwise distances (Jaccard/Aitchison) is calculated in permanova.sh / permanova.R (due to runtime). Run first.
+Pairwise distances (Jaccard) is calculated in permanova.sh / permanova.R (due to runtime). Run first.
 Here we extract the average (consensus) within-sample between-pipeline Jaccard similarity
 
 Variables calculated: 
 > distave_{mydist}_{c} (all datasets)
 > distexp_{mydist}_{c} (ground truth datasets)
 
-```{r pair_dist, eval=TRUE}
+```{r pair_dist, eval=TRUE,include=TRUE}
 
 stats_dataset <- readRDS(file = paste0(output_path, "stats_dataset_picrust_wrecall_wprecision_genus_perctpfp_picrustrecall.rds"))
 # distlist <- readRDS(file = paste0(output_path, "hclust_distance_matrices.rds"))
 distlist <- list()
-dendlist <- list()
 
 pairwise_sample_mean <- function(pipe_i, pipe_j) {
         # Get indices for each pipeline (rows for i, columns for j)
@@ -2222,9 +2258,9 @@ pairwise_sample_mean <- function(pipe_i, pipe_j) {
         mean(dists$distance, na.rm = TRUE)
 }
 
-for (mydist in c("aitchison", "jaccard")) {  
+for (mydist in c("jaccard")) {  
   for (d in datasets$datasets) {
-    for (c in c("asv249", "q2", "KO")) { 
+    for (c in c("asv", "asv249", "q2", "q2_gg", "idtaxa", "idtaxa_gg", "deftax", "KO", "cyc")) { 
 
       print(paste("Processing", mydist, d, c))
 
@@ -2285,10 +2321,6 @@ for (mydist in c("aitchison", "jaccard")) {
         pip_dist <- as.dist(pip_dist_mat) # this matrix contains the pairwise distances 
         distlist[[mydist]][[lev]][[d]][[c]] <- pip_dist  
 
-        # Perform hierarchical clustering to see how pipelines behave relative to eachother
-        hdist <- hclust(pip_dist, method = "average") 
-        dendlist[[d]][[paste0(mydist, "_", c)]] <- as.dendrogram(hdist)
-
         # pip_dist_mat <- distlist[[mydist]][[lev]][[d]][[c]] %>% as.matrix()
         rownames(pip_dist_mat) <- colnames(pip_dist_mat) <- gsub(paste0("_", d), "", rownames(pip_dist_mat))   
         
@@ -2320,373 +2352,21 @@ for (mydist in c("aitchison", "jaccard")) {
   } # datasets
 } # distance metric
 
-dist_flat <- list()
-distlist <- readRDS(file = paste0(output_path, "hclust_distance_matrices.rds"))
+# convert to simularities + keep jaccard 
+jaccard_feature <- rapply(distlist[["jaccard"]],
+                  function(x) {
+                    m <- 1 - as.matrix(x)
+                    diag(m) <- 1   # a pipeline is 100% similar to itself
+                    m
+                  },
+                  classes = "dist", how = "replace")
 
-for (mydist in c("aitchison", "jaccard")) {  
-  for (d in datasets$datasets) {
-    for (lev in c("asv", "genus", "picrust")) {  # 
-      
-      c <- case_when(
-        lev == "asv" ~ "asv249",
-        lev == "genus" ~ "q2",
-        lev == "picrust" ~ "KO"
-      )
-
-      dist_flat[[mydist]][[paste0(d, "_", c)]] <- as.matrix(distlist[[mydist]][[lev]][[d]][[c]])
-      
-    }
-  }
-}
-
-comb <- list()
-
-for (lev in c("all", "asv", "q2", "KO")) {
-
-  if (lev %in% "all") {
-    dist_sub <- dist_flat[["jaccard"]]
-  } else {
-    dist_sub <- dist_flat[["jaccard"]][grepl(lev, names(dist_flat[["jaccard"]]))]
-  }
-
-  all_ids <- Reduce(union, lapply(dist_sub, rownames))
-
-  aligned <- lapply(dist_sub, function(m) {
-    out <- matrix(0, nrow = length(all_ids), ncol = length(all_ids),
-                  dimnames = list(all_ids, all_ids))
-    out[rownames(m), colnames(m)] <- m
-    out
-  })
-
-  sum_mat <- Reduce("+", aligned)
-  count_mat <- Reduce("+", lapply(dist_sub, function(m) {
-    out <- matrix(0, nrow = length(all_ids), ncol = length(all_ids),
-                  dimnames = list(all_ids, all_ids))
-    out[rownames(m), colnames(m)] <- 1
-    out
-  }))
-
-  consensus_matrix <- sum_mat / count_mat
-  consensus_matrix[count_mat == 0] <- NA
-  consensus_matrix <- consensus_matrix[!rownames(consensus_matrix) %in% c("Expected", "eDNAFlow", "LotuS2_otu"), !colnames(consensus_matrix) %in% c("Expected", "eDNAFlow", "LotuS2_otu")]
-
-  dist <- hclust(as.dist(consensus_matrix))
-  consensus_matrix <- consensus_matrix[labels(dist), labels(dist)]
-  
-  rownames(consensus_matrix) <- colnames(consensus_matrix) <- pipelines_l[rownames(consensus_matrix)]
-
-
-  pdf(NULL)
-  p1 <- ggdendrogram(dist) + 
-    my_theme(theme_dendro) +
-    ggtitle(lev) +
-    theme(plot.title = element_text(hjust = 0.5))
-  dev.off()
-
-  p2 <- ggcorrplot(consensus_matrix, 
-                    method = "square", 
-                    type = "full",
-                    lab = FALSE,
-                    lab_size = 3) +
-            geom_text(aes(Var1, Var2, label = round(value,2)), 
-                    family = "montserrat", size = 4/2.8) +
-            my_theme(theme_classic) + 
-            scale_fill_gradient2(low = "blue", high = "red",
-                  name = "") +
-            theme(
-              axis.title.x = element_blank(),
-              axis.title.y = element_blank(),  
-              axis.text.x = element_text(angle = 45, hjust = 1),
-              axis.line = element_line(colour = "black", linewidth = 0.5),
-              axis.line.x = element_line(colour = "black"),
-              axis.line.y = element_line(colour = "black"),
-              plot.title = element_text(hjust = 0.5),
-              legend.position="none")
-
-  comb[[lev]] <- p1 + p2 +
-    plot_layout(ncol = 1, heights = c(1, 5)) &
-    theme(plot.margin = margin(0, 0, 0, 0))
-
-}
-
-comb2 <- wrap_plots(comb, ncol = 4) 
-ggsave(paste0(plot_path, "SFigure_cluster_dist.pdf"), plot = comb2, device = cairo_pdf, width = 12, height = 3.5)
-
+get_list_names(jaccard_feature) %>% print()
+save(jaccard_feature, file = paste0(output_path, "jaccard_feature.RData"))
 saveRDS(distlist, file = paste0(output_path, "hclust_distance_matrices.rds"))
-saveRDS(dendlist, file = paste0(output_path, "hclust_distance_dendrograms.rds"))
+
+colnames(stats_dataset[[d]])
 saveRDS(stats_dataset, file = paste0(output_path, "stats_dataset_picrust_wrecall_wprecision_genus_perctpfp_picrustrecall_mds.rds"))
-
-```
-
-
-```{r hclust_cor, eval=FALSE}
-
-cor_flat <- list()
-corlist <- readRDS(paste0(output_path, "cor_mat.rds"))
-
-for (mycor in c("cor", "cor_union")) {  
-  for (d in datasets$datasets) {
-    for (lev in c("asv", "genus", "picrust")) {  # 
-      
-      if (lev == "picrust" & d %in% mocks) next
-
-      c <- case_when(
-        lev == "asv" ~ "asv249",
-        lev == "genus" ~ "q2",
-        lev == "picrust" ~ "KO"
-      )
-
-      cor_flat[[mycor]][[paste0(d, "_", c)]] <- as.matrix(corlist[[d]][[c]][["clr"]][[mycor]])
-      diag(cor_flat[[mycor]][[paste0(d, "_", c)]]) <- 1
-      
-    }
-  }
-}
-
-comb3 <- list()
-for (lev in c("all", "asv", "q2", "KO")) {
-
-  if (lev %in% "all") {
-    dist_sub <- cor_flat[["cor"]]
-  } else {
-    dist_sub <- cor_flat[["cor"]][grepl(lev, names(cor_flat[["cor"]]))]
-  }
-
-  all_ids <- Reduce(union, lapply(dist_sub, rownames))
-
-  aligned <- lapply(dist_sub, function(m) {
-    out <- matrix(0, nrow = length(all_ids), ncol = length(all_ids),
-                  dimnames = list(all_ids, all_ids))
-    out[rownames(m), colnames(m)] <- m
-    out
-  })
-
-  sum_mat <- Reduce("+", aligned)
-  count_mat <- Reduce("+", lapply(dist_sub, function(m) {
-    out <- matrix(0, nrow = length(all_ids), ncol = length(all_ids),
-                  dimnames = list(all_ids, all_ids))
-    out[rownames(m), colnames(m)] <- 1
-    out
-  }))
-
-  consensus_matrix <- sum_mat / count_mat
-  consensus_matrix[count_mat == 0] <- NA
-  consensus_matrix <- consensus_matrix[!rownames(consensus_matrix) %in% c("Expected", "eDNAFlow", "LotuS2_otu"), !colnames(consensus_matrix) %in% c("Expected", "eDNAFlow", "LotuS2_otu")]
-
-  dist <- hclust(as.dist(1-consensus_matrix)) # convert to distance (1- correlation)
-  consensus_matrix <- consensus_matrix[labels(dist), labels(dist)]
-  rownames(consensus_matrix) <- colnames(consensus_matrix) <- pipelines_l[rownames(consensus_matrix)]
-
-  pdf(NULL)
-  p1 <- ggdendrogram(dist) + 
-    my_theme(theme_dendro) +
-    ggtitle(lev) +
-    theme(plot.title = element_text(hjust = 0.5))
-  dev.off()
-
-  p2 <- ggcorrplot(1-consensus_matrix, 
-                    method = "square", 
-                    type = "full",
-                    lab = FALSE,
-                    lab_size = 3) +
-            geom_text(aes(Var1, Var2, label = round(value,2)), 
-                    family = "montserrat", size = 4/2.8) +
-            my_theme(theme_classic) + 
-            scale_fill_gradient2(low = "blue", high = "red",
-                  name = "") +
-            theme(
-              axis.title.x = element_blank(),
-              axis.title.y = element_blank(),  
-              axis.text.x = element_text(angle = 45, hjust = 1),
-              axis.line = element_line(colour = "black", linewidth = 0.5),
-              axis.line.x = element_line(colour = "black"),
-              axis.line.y = element_line(colour = "black"),
-              plot.title = element_text(hjust = 0.5),
-              legend.position="none")
-
-  comb3[[lev]] <- p1 + p2 +
-    plot_layout(ncol = 1, heights = c(1, 5)) &
-    theme(plot.margin = margin(0, 0, 0, 0))
-
-}
-
-comb4 <- wrap_plots(comb3, ncol = 4) 
-ggsave(paste0(plot_path, "SFigure_cluster_cor.pdf"), plot = comb4, device = cairo_pdf, width = 12, height = 3.5)
-
-# Combine distance and correlation results into one figure
-comb4 <- comb2 / comb4 + plot_layout(ncol = 1, heights = c(1, 1)) &
-  theme(plot.margin = margin(0, 0, 0, 0))
-
-ggsave(paste0(plot_path, "SFigure_cluster_comb.pdf"), plot = comb4, device = cairo_pdf, width = 12, height = 7)
-
-
-```
-
-
-
-#### Hierarchical clustering 
-Here we perform hierarchical clustering on the: 
-> Jaccard pairwise distance matrices.
-> Correlation matrices (converted to distance) 
-
-The goal is to assess whether pipelines cluster the same relative to eachother on different feature-leves and across different datasets/types
-```{r hclust_dist, eval=FALSE}
-
-# comparison matrix for each distance metric
-dendlist <- readRDS(file = paste0(output_path, "hclust_distance_dendrograms.rds"))
-
-comparison_results <- list()
-dendlist2 <- list()
-
-for (d in names(dendlist)) {
-  dendlist2[[d]] <- dendlist[[d]]  
-  dendlist2[[d]]$aitchison_asv <- NULL 
-  dendlist2[[d]]$jaccard_asv <- NULL
-}
-
-dend_all <- list()
-
-for (mydist in c("aitchison", "jaccard")) {
-  for (d in datasets$datasets) {
-    for (c in c("asv249", "q2", "KO")) { # "asv", "asv199",  "idtaxa", "q2_gg", "idtaxa_gg","cyc"
-      key <- paste0(mydist, "_", c)
-      if (!is.null(dendlist[[d]][[key]])) {
-        # Use a unique name that includes distance metric, dataset, and classifier
-        name <- paste(mydist, d, c, sep = "_")
-        dend_all[[name]] <- dendlist[[d]][[key]]
-      }
-    }
-  }
-}
-
-# Convert to dendlist class
-dend_all <- do.call("dendlist", dend_all)
-
-# Create pairwise comparison matrices
-n <- length(dend_all)
-cophenetic_mat <- matrix(NA, n, n, dimnames = list(names(dend_all), names(dend_all)))
-bakers_gamma_mat <- matrix(NA, n, n, dimnames = list(names(dend_all), names(dend_all)))
-
-for (i in 1:n) {
-  for (j in i:n) {
-    if (i == j) {
-      cophenetic_mat[i, j] <- 1
-      bakers_gamma_mat[i, j] <- 1
-    } else {
-      # Get labels from both dendrograms
-      labels_i <- labels(dend_all[[i]])
-      labels_j <- labels(dend_all[[j]])
-
-      # Find common labels
-      common_labels <- intersect(labels_i, labels_j)
-      
-      # Skip if not enough common labels
-      if (length(common_labels) < 2) {
-        warning(paste("Not enough common labels between", names(dend_all)[i], 
-                     "and", names(dend_all)[j]))
-        next
-      }
-      
-      # Find labels to remove (those NOT in common)
-      labels_to_remove_i <- setdiff(labels_i, common_labels)
-      labels_to_remove_j <- setdiff(labels_j, common_labels)
-      
-      # Prune dendrograms to remove non-common labels
-      dend_i_pruned <- prune(dend_all[[i]], labels_to_remove_i)
-      dend_j_pruned <- prune(dend_all[[j]], labels_to_remove_j)
-      
-      # Cophenetic correlation
-      cophenetic_mat[i, j] <- cophenetic_mat[j, i] <- 
-        cor_cophenetic(dend_i_pruned, dend_j_pruned)
-      
-      # Baker's Gamma
-      bakers_gamma_mat[i, j] <- bakers_gamma_mat[j, i] <- 
-        cor_bakers_gamma(dend_i_pruned, dend_j_pruned)
-    }
-  }
-}
-
-# Save results
-comparison_results <- list(
-  cophenetic = cophenetic_mat,
-  bakers_gamma = bakers_gamma_mat)
-
-saveRDS(comparison_results, paste0(output_path, "dendrogram_comparisons_all.rds"))
-
-```
-
-
-#### Permanova (leave one out) 
-To assess which pipelines explain most of the differences, we performed a leave-one-out permanova
-> q2, idtaxa (silva * gg)
-> KO and metacyc
-
-Permanova was ran in an external script (permanova.sh / permanova.R). Results are compiled here. 
-
-```{r permanova, eval=FALSE} 
-
-stats_dataset <- readRDS(file = paste0(output_path, "stats_dataset_picrust_wrecall_wprecision_genus_perctpfp_picrustrecall_mds.rds"))
-
-pip2 <- c("all", pipelines)
-df2 <- data.frame(pipeline = character(),
-                  variable = character(),
-                  value = numeric(),
-                  dataset = character(),
-                  classifier = character(),
-                  distance = character())
-
-for (d in datasets$datasets) {
-  for (c in c("q2", "idtaxa", "KO", "cyc")) {
-    for (mydist in c("aitchison", "jaccard")) {
-
-      lev <- ifelse(c %in% classifiers, "genus", "")
-      
-      myfile <- paste0(output_path, "permanova_", lev, c, "_", mydist, "_", d, "_leaveoneout.rds")
-      if (!file.exists(myfile)) {
-        message(paste(myfile, "does not exist"))
-        next
-      }
-
-      res <- readRDS(file = myfile)[[mydist]]
-      
-      df_list <- lapply(names(res), function(p) {
-        df_p <- data.frame(res[[p]][["permanova"]])[1, , drop = FALSE]
-        df_p[sapply(df_p, is.numeric)] <- lapply(df_p[sapply(df_p, is.numeric)], as.numeric)
-        df_p
-      })
-      
-      names(df_list) <- names(res)
-      df <- do.call(rbind, df_list) %>% as.data.frame()
-      colnames(df) <- c("df", "SS", "R2", "F", "p")
-        
-      df <- df %>% 
-        rownames_to_column(var = "pipeline") %>%
-        pivot_longer(-pipeline, names_to = "variable", values_to = "value") %>%
-        mutate(dataset = d,
-               classifier = c,
-               distance = mydist,
-               pipeline = factor(pipeline, levels = pip2))
-
-      R2_all <- df %>% filter(pipeline %in% "all", variable %in% "R2") %>% pull(value)
-
-      df_add <- df %>% 
-        filter(!pipeline %in% "all", variable %in% "R2") %>%
-        mutate(delta = R2_all - value) %>%
-        select(pipeline, R2=value, delta)
-
-      colnames(df_add)[2] <- paste0("perm_R2_", mydist, "_", c)
-      colnames(df_add)[3] <- paste0("perm_deltaR2_", mydist, "_", c)
-      
-      stats_dataset[[d]] <- stats_dataset[[d]] %>%
-        dplyr::left_join(., df_add, by = "pipeline")
-
-      df2 <- rbind(df2, df)
-
-    }
-  }
-}
-
-saveRDS(df2, file = paste0(output_path, "allpermanova.rds"))
 saveRDS(stats_dataset, file = paste0(output_path, "stats_dataset_picrust_wrecall_wprecision_genus_perctpfp_picrustrecall_mds_perm.rds"))
 
 ```
@@ -2695,7 +2375,7 @@ saveRDS(stats_dataset, file = paste0(output_path, "stats_dataset_picrust_wrecall
 Average between pipeline & correlation to expected
 Corrlations calculated in cor_pip.R / cor_pip.sh 
 
-```{r feat_cor, eval=FALSE}
+```{r feat_cor, eval=TRUE,include=TRUE}
 
 stats_dataset <- readRDS(file = paste0(output_path, "stats_dataset_picrust_wrecall_wprecision_genus_perctpfp_picrustrecall_mds_perm.rds"))
 levels <- c("asv", "asv249", "asv_exp", "q2", "idtaxa", "q2_gg", "idtaxa_gg", "KO", "cyc", "deftax") 
@@ -2708,8 +2388,7 @@ cor_all <- data.frame(pipeline = character(),
                       transformation = character(),
                       feat = character(),
                       cor = numeric(),
-                      cor_part = numeric(),
-                      cor_union = numeric(),
+                      cor_intersection = numeric(),
                       exp = character())
 
 mat_all <- list()
@@ -2735,9 +2414,9 @@ for (d in datasets$datasets) {
     }
 
     cor_list <- readRDS(file = myfile)
-    avg_corr <- cor_list$avg_corr
-    avg_part_corr <- cor_list$avg_part_corr
-    avg_union_corr <- cor_list$avg_union_corr
+    
+    avg_corr <- cor_list$avg_corr # union correlation
+    avg_intersection_corr <- cor_list$avg_intersection_corr # intersection correlation
 
     for (l in levs) {
       if (l %in% "consensus") {
@@ -2771,35 +2450,21 @@ for (d in datasets$datasets) {
           }
 
           cor_sub <- data.frame(avg = rowMeans(cormat, na.rm=TRUE)) %>% rownames_to_column(var = "pipeline")
-
-          # Partial correlation
-          corpartmat <- avg_part_corr[[p2]][[d]][[c]][[t]]
-          diag(corpartmat) <- NA
-          if (!is.null(pipeline_remove)) {
-            if (length(p2_remove) > 0) {
-              corpartmat <- data.frame(corpartmat) %>% 
-                filter(!rownames(.) %in% p2_remove) %>% 
-                select(-all_of(p2_remove))
-            }
-          }  
-
-          corpart_sub <- data.frame(avg = rowMeans(corpartmat, na.rm=TRUE)) %>% rownames_to_column(var = "pipeline")
           
-          corunionmat <- avg_union_corr[[p2]][[d]][[c]][[t]]
-          diag(corunionmat) <- NA
+          corintersectionmat <- avg_intersection_corr[[p2]][[d]][[c]][[t]]
+          diag(corintersectionmat) <- NA
           if (!is.null(pipeline_remove)) {
             if (length(p2_remove) > 0) {
-              corunionmat <- data.frame(corunionmat) %>% 
+              corintersectionmat <- data.frame(corintersectionmat) %>% 
                 filter(!rownames(.) %in% p2_remove) %>% 
                 select(-all_of(p2_remove))
             }
           }  
 
-          corunion_sub <- data.frame(avg = rowMeans(corunionmat, na.rm=TRUE)) %>% rownames_to_column(var = "pipeline")
+          corintersection_sub <- data.frame(avg = rowMeans(corintersectionmat, na.rm=TRUE)) %>% rownames_to_column(var = "pipeline")
 
           mat_all[[d]][[c]][[t]][["cor"]] <- cormat
-          mat_all[[d]][[c]][[t]][["cor_part"]] <- corpartmat
-          mat_all[[d]][[c]][[t]][["cor_union"]] <- corunionmat
+          mat_all[[d]][[c]][[t]][["cor_intersection"]] <- corintersectionmat
 
           # Combine in df 
           df <- data.frame(pipeline = cor_sub$pipeline,
@@ -2808,8 +2473,7 @@ for (d in datasets$datasets) {
                                       transformation = t,
                                       feat = c,
                                       cor = cor_sub$avg,
-                                      cor_part = corpart_sub$avg,
-                                      cor_union = corunion_sub$avg,
+                                      cor_intersection = corintersection_sub$avg,
                                       exp = "consensus")
           
           # add to big df (for plotting later)
@@ -2817,8 +2481,8 @@ for (d in datasets$datasets) {
 
           # Add df to stats_dataset
           df_add <- df %>% 
-            select(pipeline, cor, cor_part, cor_union)
-          colnames(df_add) <- c("pipeline", paste0("cor_", t, "_", c), paste0("corpart_", t, "_", c), paste0("corunion_", t, "_", c))
+            select(pipeline, cor, cor_intersection)
+          colnames(df_add) <- c("pipeline", paste0("cor_", t, "_", c), paste0("corintersection_", t, "_", c))
 
           stats_dataset[[d]] <- stats_dataset[[d]] %>% 
             dplyr::left_join(., df_add, by = "pipeline")
@@ -2838,27 +2502,14 @@ for (d in datasets$datasets) {
             select("Expected") %>% 
             rownames_to_column(var = "pipeline") %>% 
             filter(!pipeline %in% "Expected")
-          
-          corunionmat <- avg_union_corr[[p2]][[d]][[c2]][[t]] %>% 
+ 
+          corintersectionmat <- avg_intersection_corr[[p2]][[d]][[c2]][[t]] %>% 
             data.frame() %>% 
             select("Expected") %>% 
             rownames_to_column(var = "pipeline") %>% 
             filter(!pipeline %in% "Expected")
 
-          corpartmat <- avg_part_corr[[p2]][[d]][[c2]][[t]] %>% 
-            data.frame() %>% 
-            select("Expected") %>% 
-            rownames_to_column(var = "pipeline") %>% 
-            filter(!pipeline %in% "Expected")
-
-          corunionmat <- avg_union_corr[[p2]][[d]][[c2]][[t]] %>% 
-            data.frame() %>% 
-            select("Expected") %>% 
-            rownames_to_column(var = "pipeline") %>% 
-            filter(!pipeline %in% "Expected")
-
-          identical(cormat$pipeline, corpartmat$pipeline)
-          identical(cormat$pipeline, corunionmat$pipeline)
+          identical(cormat$pipeline, corintersectionmat$pipeline)
 
           # Combine in df 
           df <- data.frame(pipeline = cormat$pipeline,
@@ -2867,8 +2518,7 @@ for (d in datasets$datasets) {
                                       transformation = t,
                                       feat = c,
                                       cor = cormat$Expected,
-                                      cor_part = corpartmat$Expected,
-                                      cor_union = corunionmat$Expected,
+                                      cor_intersection = corintersectionmat$Expected,
                                       exp = "expected")
           
           # add to big df (for plotting later)
@@ -2876,10 +2526,9 @@ for (d in datasets$datasets) {
 
           # Write to stats_dataset
           df_add <- data.frame(cormat) %>% select(pipeline, cor = Expected) %>%
-            dplyr::left_join(., data.frame(corpartmat) %>% select(pipeline, cor_part = Expected), by = "pipeline") %>%
-            dplyr::left_join(., data.frame(corunionmat) %>% select(pipeline, cor_union = Expected), by = "pipeline")
+            dplyr::left_join(., data.frame(corintersectionmat) %>% select(pipeline, cor_union = Expected), by = "pipeline")
 
-          colnames(df_add) <- c("pipeline", paste0("cor_", t, "_", "exp_", c2), paste0("corpart_", t, "_", "exp_", c2), paste0("corunion_", t, "_", "exp_", c2))  
+          colnames(df_add) <- c("pipeline", paste0("cor_", t, "_", "exp_", c2), paste0("corintersection_", t, "_", "exp_", c2))  
           stats_dataset[[d]] <- stats_dataset[[d]] %>% 
             dplyr::left_join(., df_add, by = "pipeline")
 
@@ -2894,12 +2543,15 @@ saveRDS(cor_all, paste0(output_path, "cor_df.rds"))
 saveRDS(mat_all, paste0(output_path, "cor_mat.rds"))
 saveRDS(stats_dataset, file = paste0(output_path, "stats_dataset_picrust_wrecall_wprecision_genus_perctpfp_picrustrecall_mds_perm_cor.rds"))
 
-```
+abundance_correlations <- mat_all
+get_list_names(abundance_correlations) %>% print()
+save(abundance_correlations, file = paste0(output_path, "correlation_abundance.RData"))
 
+```
 
 ## Classifiers and reference databases
 ### Between classifier/reference concordance
-```{r tax_conc, eval=FALSE}
+```{r tax_conc, eval=FALSE,include=TRUE}
 
 concordance <- data.frame(dataset = character(),
                           pipeline = character(),
@@ -2916,38 +2568,44 @@ concordance <- data.frame(dataset = character(),
 
 alloverlaps <- list()
 
+# Helper: taxonomy table from a TSE
+get_tax <- function(tse) {
+  if (is.null(tse)) return(NULL)
+  tax <- sapply(colnames(rowData(tse)), function(x) gsub(" ", "_", rowData(tse)[[x]])) %>% data.frame()
+  tax$kingdom <- NULL
+  tax$domain <- NULL
+  tax$species <- NULL
+  tax
+}
+
 for (d in datasets$datasets) {
-  tse_q2 <- readRDS(file = paste0(output_path, "tse_", "q2", "_", d, "_asv_list_allpipelines.rds"))
-  tse_idtaxa <- readRDS(file = paste0(output_path, "tse_", "idtaxa", "_", d, "_asv_list_allpipelines.rds"))
-  tse_def <- readRDS(paste0(output_path, "tse_deftax_", d, "_allpipelines.rds"))
+  tse_q2        <- readRDS(file = paste0(output_path, "tse_", "q2", "_", d, "_asv_list_allpipelines.rds"))
+  tse_idtaxa    <- readRDS(file = paste0(output_path, "tse_", "idtaxa", "_", d, "_asv_list_allpipelines.rds"))
+  tse_q2_gg     <- readRDS(file = paste0(output_path, "tse_", "q2_gg", "_", d, "_asv_list_allpipelines.rds"))
+  tse_idtaxa_gg <- readRDS(file = paste0(output_path, "tse_", "idtaxa_gg", "_", d, "_asv_list_allpipelines.rds"))
+  tse_def       <- readRDS(paste0(output_path, "tse_deftax_", d, "_allpipelines.rds"))
 
   for (p in pipelines) {
 
     print(paste(d, "|", p))
 
-    tse_def_sub <- tse_def[[p]]
-    tse_q2_sub <- tse_q2[[p]]
-    tse_idtaxa_sub <- tse_idtaxa[[p]]
+    if (is.null(tse_def[[p]])) next
 
-    if (is.null(tse_def_sub)) next
-
-    tax_q2 <- sapply(colnames(rowData(tse_q2_sub)), function(x) gsub(" ", "_", rowData(tse_q2_sub)[[x]])) %>% data.frame()
-    tax_q2$kingdom <- NULL
-    tax_q2$species <- NULL
-    tax_idtaxa <- sapply(colnames(rowData(tse_idtaxa_sub)), function(x) gsub(" ", "_", rowData(tse_idtaxa_sub)[[x]])) %>% data.frame()
-    tax_idtaxa$kingdom <- NULL
-    tax_idtaxa$species <- NULL
-
-    tax_def <- sapply(colnames(rowData(tse_def_sub)), function(x) gsub(" ", "_", rowData(tse_def_sub)[[x]])) %>% data.frame() 
-    tax_def$kingdom <- NULL 
-    tax_def$species <- NULL
-
+    # Object names must match the parts of `comb` split on "_" (e.g. "q2.gg" -> tax_q2.gg)
+    tax_def       <- get_tax(tse_def[[p]])
+    tax_q2        <- get_tax(tse_q2[[p]])
+    tax_idtaxa    <- get_tax(tse_idtaxa[[p]])
+    tax_q2.gg     <- get_tax(tse_q2_gg[[p]])
+    tax_idtaxa.gg <- get_tax(tse_idtaxa_gg[[p]])
 
     # Check
-    identical(rownames(tax_def), rownames(tax_q2)) 
-    identical(rownames(tax_q2), rownames(tax_idtaxa))     
+    identical(rownames(tax_def), rownames(tax_q2))
+    identical(rownames(tax_q2), rownames(tax_idtaxa))
+    identical(rownames(tax_q2), rownames(tax_q2.gg))
+    identical(rownames(tax_idtaxa), rownames(tax_idtaxa.gg))
 
-    for (comb in c("def_q2", "def_idtaxa", "q2_idtaxa")) {
+    for (comb in c("def_q2", "def_idtaxa", "q2_idtaxa",      # between classifiers (SILVA)
+                   "q2_q2.gg", "idtaxa_idtaxa.gg", "q2.gg_idtaxa.gg")) {  # between references (SILVA vs. Greengenes2)
       perc_overlap <- data.frame(dataset = d,
                                 pipeline = p,
                                 comb = comb,
@@ -2960,23 +2618,31 @@ for (d in datasets$datasets) {
                                 na2 = 0,
                                 partial = 0,
                                 mismatch = 0)
-                              
+
       clas1 <- (str_split(comb, "_") %>% unlist())[1]
       clas2 <- (str_split(comb, "_") %>% unlist())[2]
 
       tax1 <- get(paste0("tax_", clas1))
       tax2 <- get(paste0("tax_", clas2))
-      
+
+      # Skip combinations where one of the classifications is missing for this pipeline
+      if (is.null(tax1) | is.null(tax2)) next
+
+      # Align ASVs (row order may differ between classifications)
+      shared <- intersect(rownames(tax1), rownames(tax2))
+      tax1 <- tax1[shared, , drop = FALSE]
+      tax2 <- tax2[shared, , drop = FALSE]
+
       for (n in colnames(tax1)) {
         tmp <- data.frame(clas1 = tax1[[n]],
-                      clas2 = tax2[[n]])
+                          clas2 = tax2[[n]])
 
         tmp$conc <- ifelse((is.na(tax1[[n]]) & !is.na(tax2[[n]])) | (is.na(tax2[[n]]) & !is.na(tax1[[n]])), FALSE, tax1[[n]] == tax2[[n]])
         tmp$conc[(is.na(tax1[[n]]) & is.na(tax2[[n]]))] <- TRUE
 
-        perc_overlap[[n]][1] <- sum(tmp$conc) / length(tmp$conc) 
+        perc_overlap[[n]][1] <- sum(tmp$conc) / length(tmp$conc)
 
-        tmp_sub <- tmp %>% filter(conc == FALSE) 
+        tmp_sub <- tmp %>% filter(conc == FALSE)
 
         if (n %in% "genus" & nrow(tmp_sub) > 0) {
           tmp_sub$mismatch_reason <- case_when(
@@ -2987,15 +2653,15 @@ for (d in datasets$datasets) {
             TRUE ~ "mismatch")
 
           reason_props <- summary(factor(tmp_sub$mismatch_reason)) / nrow(tmp_sub)
-          
+
           perc_overlap$na1[1] <- ifelse("na1" %in% names(reason_props), reason_props["na1"], 0)
           perc_overlap$na2[1] <- ifelse("na2" %in% names(reason_props), reason_props["na2"], 0)
           perc_overlap$partial[1] <- ifelse("partial" %in% names(reason_props), reason_props["partial"], 0)
           perc_overlap$mismatch[1] <- ifelse("mismatch" %in% names(reason_props), reason_props["mismatch"], 0)
 
-          alloverlaps[[d]][[p]][[comb]][[n]] <- list(conc = tmp, disconc = tmp_sub) 
+          alloverlaps[[d]][[p]][[comb]][[n]] <- list(conc = tmp, disconc = tmp_sub)
         } else {
-            alloverlaps[[d]][[p]][[comb]][[n]] <- list(conc = tmp)
+          alloverlaps[[d]][[p]][[comb]][[n]] <- list(conc = tmp)
         }
 
       }
@@ -3010,49 +2676,20 @@ concordance <- concordance %>%
   mutate(dataset = factor(dataset, levels = datasets$datasets)) %>%
   mutate(pipeline = factor(pipeline, levels = pipelines))
 
-alloverlaps[["concordance"]] <- concordance 
+alloverlaps[["concordance"]] <- concordance
 
 saveRDS(alloverlaps, file = paste0(output_path, "concordance_taxonomy.rds"))
 
-```
-
-### Reason for taxonomic mismatches
-> NA in one of the classifiers
-> Partial match (substring match, eg prevotella and prevotella_9)
-> Complete mismatch  
-```{r mismatch_reason, eval=FALSE}
-
-alloverlaps <- readRDS(alloverlaps, file = paste0(output_path, "concordance_taxonomy.rds"))
-concordance <- alloverlaps$concordance
-pltlist <- list()
-
-for (d in datasets$datasets) {
-  conc_sub <- concordance %>%
-    filter(dataset %in% d) %>% 
-    mutate(concordant = genus,
-           discordant = 1 - genus,
-           na1 = na1 * discordant,
-           na2 = na2 * discordant,
-           partial = partial * discordant,
-           mismatch = mismatch * discordant) %>%
-    select(comb, pipeline, concordant, na1, na2, partial, mismatch) %>%
-    pivot_longer(cols = c(concordant, na1, na2, partial, mismatch), 
-                 names_to = "category", 
-                 values_to = "percentage") %>%
-    mutate(category = factor(category, levels = rev(c("concordant", "partial", "mismatch", "na2", "na1")))) %>%
-    mutate(comb = factor(comb, levels = c("def_q2", "def_idtaxa", "q2_idtaxa"), 
-                               labels = c("Default vs. q2", "Default vs. idtaxa", "q2 vs. idtaxa"))) 
-
-}
-
+# for publication
+concordance_classify <- alloverlaps
+get_list_names(concordance_classify)
+save(concordance_classify, file = paste0(output_path, "concordance_classify.RData"))
 
 ```
-
-
 
 # Statistical performance
 ## Add metadata to tse  
-```{r prep_metadata, eval=FALSE}
+```{r prep_metadata, eval=FALSE, include=TRUE}
 
 for (d in datasets$datasets[!datasets$datasets %in% mocks]) { 
 
@@ -3144,7 +2781,7 @@ for (d in datasets$datasets[!datasets$datasets %in% mocks]) {
 ## Alpha diversity
 ### Calculate Alpha metrics
 Calculate alpha diversity and save in new tse
-```{r alpha_calc, eval=FALSE}
+```{r alpha_calc, eval=FALSE, include=TRUE}
 
 for (d in datasets$datasets[!datasets$datasets %in% mocks]) { 
   for (c in c("asv")) { # , classifiers, "deftax"  
@@ -3183,7 +2820,7 @@ for (d in datasets$datasets[!datasets$datasets %in% mocks]) {
 ```
 
 ### Run statistical models
-```{r alpha_stat, eval=FALSE}
+```{r alpha_stat, eval=TRUE,include=TRUE}
 
 stats_dataset <- readRDS(file = paste0(output_path, "stats_dataset_picrust_wrecall_wprecision_genus_perctpfp_picrustrecall_mds_perm_cor.rds"))
 stats_sample <- readRDS(file = paste0(output_path, "stats_sample_picrust_wrecall_wprecision_genus_picrustrecall.rds"))
@@ -3299,10 +2936,15 @@ for (d in c(sims, reals)) {
 saveRDS(allmods, file = paste0(output_path, "alpha_models_lm.rds"))
 saveRDS(stats_dataset, file = paste0(output_path, "stats_dataset_picrust_wrecall_wprecision_genus_perctpfp_picrustrecall_mds_perm_cor_alpha.rds"))
 
+alpha_stats <- allmods
+get_list_names(alpha_stats) %>% print()
+
+save(alpha_stats, file = paste0(output_path, "alpha_stats.RData"))
+
 ```
 
 ### Assess inflation/deflation
-```{r alpha_inflation, eval=FALSE}
+```{r alpha_inflation, eval=TRUE,include=TRUE}
 
 stats_dataset <- readRDS(file = paste0(output_path, "stats_dataset_picrust_wrecall_wprecision_genus_perctpfp_picrustrecall_mds_perm_cor_alpha.rds"))
 pltlist <- list()
@@ -3364,6 +3006,8 @@ for (d in sims) {
   }
 }
 
+saveRDS(stats_dataset, file = paste0(output_path, "stats_dataset_picrust_wrecall_wprecision_genus_perctpfp_picrustrecall_mds_perm_cor_alpha2.rds"))
+
 combined <- wrap_plots(pltlist[["miseq_v4_sim"]], ncol=2) /
             wrap_plots(pltlist[["novaseq_v4_sim"]], ncol=2) +
             plot_layout(guides = "collect") +
@@ -3388,24 +3032,13 @@ final_plot <- arrangeGrob(g,
 
 ggsave(paste0(plot_path, "SFigure_alpha_inflation.pdf"), plot = final_plot, device = cairo_pdf, width = 9, height = 5)  
 
-saveRDS(stats_dataset, file = paste0(output_path, "stats_dataset_picrust_wrecall_wprecision_genus_perctpfp_picrustrecall_mds_perm_cor_alpha2.rds"))
-
-
-df <- lapply(sims, function(d) {
-  stats_dataset[[d]] %>% select(pipeline, contains("inflation")) %>% 
-    mutate(dataset = d) 
-}) %>% bind_rows() %>% 
-  filter(!pipeline %in% "LotuS2_otu") 
-
-data.frame(df) %>% print()
-
 ```
 
 ## Beta Diversity
 ### Compile statistical models
 Permanovas ran in separate script: permanova_group.sh / permanova_group.R
 
-```{r beta_div, eval=FALSE}
+```{r beta_div, eval=TRUE,include=TRUE}
 
 stats_dataset <- readRDS(file = paste0(output_path, "stats_dataset_picrust_wrecall_wprecision_genus_perctpfp_picrustrecall_mds_perm_cor_alpha2.rds"))
 allperm <- list()
@@ -3473,13 +3106,18 @@ for (d in c(sims, reals)) {
 saveRDS(allperm, file = paste0(output_path, "group_permanova.rds"))
 saveRDS(stats_dataset, file = paste0(output_path, "stats_dataset_picrust_wrecall_wprecision_genus_perctpfp_picrustrecall_mds_perm_cor_alpha2_beta.rds"))
 
+beta_stats <- allperm 
+get_list_names(beta_stats) %>% print()
+
+save(beta_stats, file = paste0(output_path, "beta_stats.RData"))
+
 ```
 
 ## Differential abundance
 ### Create the statistical models 
-```{r da_stats, eval=FALSE}
+```{r da_stats, eval=FALSE,include=TRUE}
 
-df <- df2 <- data.frame(est = numeric(),
+df <- <- data.frame(est = numeric(),
                 SE = numeric(),
                 stat = numeric(),
                 pval = numeric(),
@@ -3546,409 +3184,381 @@ for (d in c(sims, reals)) {
       allmods$padj <- p.adjust(allmods$pval, method = "BH") # FDR correction using BH
       df <- bind_rows(df, allmods) # bind to df 
 
-      # Cross-check: microbiome as predictor 
-      fam <- ifelse(var %in% "label", "binomial", "gaussian")
-      allmods <- lapply(genera, function(x) { 
-          if (var %in% "RC1") meta_asv[[var]] <- scale(meta_asv[[var]])
-          myformula <- paste(var, "~", x)
-          glm(formula = myformula, 
-              family = fam, 
-              data = meta_asv) %>% summ(., scale = TRUE, digits = 5) %>% 
-          .$coeftable %>% 
-          as.data.frame() %>% 
-          .[2,] %>%
-          mutate(genus = x,
-                 pipeline = pip,
-                 classifier = c,
-                 dataset = d,
-                 fam = fam)
-      }) %>% bind_rows()
-      
-      rownames(allmods) <- NULL
-      colnames(allmods) <- c("est", "SE", "stat", "pval", "genus", "pipeline", "classifier", "dataset", "fam")
-      allmods$padj <- p.adjust(allmods$pval, method = "BH") # FDR correction using BH
-      df2 <- bind_rows(df2, allmods) # bind to df 
-
     }
   }
 }
 
-da_stats <- list(df = df,
-                 df2 = df2)
-
+da_stats <- list(df = df) 
 saveRDS(da_stats, file = paste0(output_path, "differential_abundance_stats.rds"))
 
+genus_stats <- df
+tibble(df) %>% print()
+
+save(genus_stats, file = paste0(output_path, "genus_stats.RData"))
+
+# Subset expected (ground truth)
+load(file = paste0(output_path, "genus_stats.RData"))
+exp_stats <- genus_stats %>% filter(dataset %in% "miseq_v4_sim", pipeline %in% "Expected", classifier %in% "q2") %>% 
+  select(-classifier, -pipeline, -dataset) 
+
+write_tsv(exp_stats, paste0(sim_dir, "expected_lm_associations.tsv"), row.names=TRUE)
 
 ```
 
 ### Compare DA statistics across pipelines
-```{r da_compare, eval=FALSE}
+```{r da_compare, eval=TRUE, include=TRUE}
 
 stats_dataset <- readRDS(file = paste0(output_path, "stats_dataset_picrust_wrecall_wprecision_genus_perctpfp_picrustrecall_mds_perm_cor_alpha2_beta.rds"))
 da_stats <- readRDS(file = paste0(output_path, "differential_abundance_stats.rds"))
 df_comb <- da_stats$df
 
-for (m in c("", "mpred_")) {
-  if (m %in% "mpred_") {
-    df_comb <- da_stats$df2 # models with microbiome as predictor
-  } else {
-    df_comb <- da_stats$df # models with microbiome as outcome
-  }  
+genus_coverage <- list()
+all_mats <- list() # to store all correlation matrices 
+all_df <- list() # to store all summary statistics and derivatives (e.g, proportion significance)
 
-  genus_coverage <- list()
-  all_mats <- list() # to store all correlation matrices 
-  all_df <- list() # to store all summary statistics and derivatives (e.g, proportion significance)
+p_thres <- 0.05
 
-  p_thres <- 0.05
+for (d in c(sims, reals)) {
+  for (c in c(classifiers, "def")) {
+    print(paste("Dataset:", d, "| Classifier:", c))
 
-  for (d in c(sims, reals)) {
-    for (c in c(classifiers, "def")) {
-      print(paste("Dataset:", d, "| Classifier:", c))
+    df <- df_comb %>% filter(dataset %in% d, grepl(c, classifier)) %>% unique()
 
-      df <- df_comb %>% filter(dataset %in% d, grepl(c, classifier)) %>% unique()
+    mean_est <- df %>%
+      group_by(genus) %>%
+      summarise(mean_est = mean(est, na.rm=TRUE)) 
 
-      mean_est <- df %>%
-        group_by(genus) %>%
-        summarise(mean_est = mean(est, na.rm=TRUE)) 
+    # Calculate difference from average effect size 
+    df <- df %>% 
+      dplyr::left_join(mean_est, by = "genus") %>%
+      mutate(est_diff = est - mean_est)
 
-      # Calculate difference from average effect size 
-      df <- df %>% 
-        dplyr::left_join(mean_est, by = "genus") %>%
-        mutate(est_diff = est - mean_est)
+    # Number of pipelines testing a genus 
+    genus_coverage[[d]] <- df %>%
+      filter(!pipeline %in% "Expected") %>% 
+      group_by(genus) %>%
+      summarise(
+        n_pipelines = n_distinct(pipeline),
+        pipelines = paste(unique(pipeline), collapse = ";")
+      ) %>%
+      arrange(desc(n_pipelines))
 
-      # Number of pipelines testing a genus 
-      genus_coverage[[d]] <- df %>%
-        filter(!pipeline %in% "Expected") %>% 
-        group_by(genus) %>%
-        summarise(
-          n_pipelines = n_distinct(pipeline),
-          pipelines = paste(unique(pipeline), collapse = ";")
-        ) %>%
-        arrange(desc(n_pipelines))
+    table(genus_coverage[[d]]$n_pipelines)  # Distribution
 
-      table(genus_coverage[[d]]$n_pipelines)  # Distribution
+    # Genera tested in any pipeline
+    genera_union <- genus_coverage[[d]] %>%  # before: common_genera > change into genera_union
+      pull(genus)
 
-      # Genera tested in any pipeline
-      genera_complete <- genus_coverage[[d]] %>%  # before: common_genera > change into genera_complete
-        pull(genus)
+    # Genera tested in all pipelines 
+    genera_intersection <- genus_coverage[[d]] %>%  # before: all_genera > change into genera_interactions (tested in all)
+      filter(n_pipelines == length(unique(df$pipeline))) %>% 
+      pull(genus)
 
-      # Genera tested in all pipelines 
-      genera_union <- genus_coverage[[d]] %>%  # before: all_genera > change into genera_union (tested in all)
-        filter(n_pipelines == length(unique(df$pipeline))) %>% 
-        pull(genus)
+    # Create filtered dataset
+    df_union <- df %>% filter(genus %in% genera_union) %>% unique()
+    df_intersection <- df %>% filter(genus %in% genera_intersection) %>% unique()
 
-      # Create filtered dataset
-      df_complete <- df %>% filter(genus %in% genera_complete) %>% unique()
-      df_union <- df %>% filter(genus %in% genera_union) %>% unique()
+    # Count the number of significant associations per pipeline
+    gencount <- df_union %>%
+      group_by(pipeline) %>%
+      summarize(da_n_tested = n(), da_n_sig=sum(padj < p_thres)) %>%
+      mutate(da_perctested_sig = da_n_sig / da_n_tested)
+    
+    colnames(gencount) <- c("pipeline", paste0(colnames(gencount)[-1], "_", c))
 
-      # Count the number of significant associations per pipeline
-      gencount <- df_complete %>%
-        group_by(pipeline) %>%
-        summarize(da_n_tested = n(), da_n_sig=sum(padj < p_thres)) %>%
-        mutate(da_perctested_sig = da_n_sig / da_n_tested)
+    stats_dataset[[d]] <- stats_dataset[[d]] %>% 
+      dplyr::left_join(., gencount, by = "pipeline")
 
-      if (!m %in% "mpred_") {
-        colnames(gencount)[2:ncol(gencount)] <- paste0(colnames(gencount)[2:ncol(gencount)], "_", c)
+    ################################################################
+    # Calculate between-pipeline correlation in summary statistics #
+    ################################################################
+    matrices <- list() # object to store cor matrices / jaccard matrix
 
-        stats_dataset[[d]] <- stats_dataset[[d]] %>% 
-          dplyr::left_join(., gencount, by = "pipeline") 
-      }
-
-      ################################################################
-      # Calculate between-pipeline correlation in summary statistics #
-      ################################################################
-      matrices <- list() # object to store cor matrices / jaccard matrix
-
-      # extract effect sizes and t-statistics
-      sumstat_matrix <- lapply(c("est", "stat"), function(s) { 
-        df_complete %>%
-          select(genus, pipeline, all_of(s)) %>%
-          pivot_wider(names_from = pipeline, values_from = .data[[s]]) %>%
-          column_to_rownames("genus")
-      })
-      
-      names(sumstat_matrix) <- c("est", "stat") 
-      
-      # number of genera tested in both
-      matrices[["overlap_n"]] <- t(!is.na(sumstat_matrix$est)) %*% (!is.na(sumstat_matrix$est)) 
-
-      matrices[["cormat_est_pairs"]] <- cor(sumstat_matrix$est, use = "pairwise.complete.obs", method = "pearson") 
-      matrices[["cormat_stat_pairs"]] <- cor(sumstat_matrix$stat, use = "pairwise.complete.obs", method = "pearson")
-
-      # If not identified (with prevalence > 10%) set effect size and statistic to 0
-      sumstat_matrix[["est"]][is.na(sumstat_matrix[["est"]])] <- 0
-      sumstat_matrix[["stat"]][is.na(sumstat_matrix[["stat"]])] <- 0
-
-      matrices[["cormat_est"]] <- cor(sumstat_matrix$est, use = "pairwise.complete.obs", method = "pearson") 
-      matrices[["cormat_stat"]] <- cor(sumstat_matrix$stat, use = "pairwise.complete.obs", method = "pearson")
-      
-      ##################################################################
-      # Calculate between-pipeline jaccard of significant associations #
-      ##################################################################
-      
-      # Jaccard of significant findings (padj < p_thres) 
-      sumstat_matrix[["sig"]] <- df_complete %>%
-        mutate(significant = padj < p_thres) %>%
-        select(genus, pipeline, significant) %>%
-        pivot_wider(names_from = pipeline, values_from = significant) %>%
+    # extract effect sizes and t-statistics
+    sumstat_matrix <- lapply(c("est", "stat"), function(s) { 
+      df_union %>%
+        select(genus, pipeline, all_of(s)) %>%
+        pivot_wider(names_from = pipeline, values_from = .data[[s]]) %>%
         column_to_rownames("genus")
+    })
+    
+    names(sumstat_matrix) <- c("est", "stat") 
+    
+    # number of genera tested in both (intersection correlation)
+    matrices[["overlap_n"]] <- t(!is.na(sumstat_matrix$est)) %*% (!is.na(sumstat_matrix$est)) 
 
-      # Overlap between all genera (considered n.s. if not tested)
-      mat <- sumstat_matrix[["sig"]]
-      matrices[["sigoverlap"]] <- outer(1:ncol(mat), 1:ncol(mat), 
-                        Vectorize(function(i,j) {
-                          both_sig <- sum(mat[,i] & mat[,j], na.rm=TRUE)
-                          either_sig <- sum(mat[,i] | mat[,j], na.rm=TRUE)
-                          both_sig/either_sig  # similarity
-                        }))
+    matrices[["cormat_est_intersection"]] <- cor(sumstat_matrix$est, use = "pairwise.complete.obs", method = "pearson") 
+    matrices[["cormat_stat_intersection"]] <- cor(sumstat_matrix$stat, use = "pairwise.complete.obs", method = "pearson")
 
-      rownames(matrices[["sigoverlap"]]) <- colnames(matrices[["sigoverlap"]]) <- colnames(mat)
+    # If not identified (with prevalence > 10%) set effect size and statistic to 0 (union correlation)
+    sumstat_matrix[["est"]][is.na(sumstat_matrix[["est"]])] <- 0
+    sumstat_matrix[["stat"]][is.na(sumstat_matrix[["stat"]])] <- 0
 
-      # Check overlap between pairwise-tested 
-      matrices[["sigoverlap_pairs"]] <- outer(1:ncol(mat), 1:ncol(mat), 
-                        Vectorize(function(i,j) {
-                          tmp <- mat[(!is.na(mat[,i]) & !is.na(mat[,j])),]
-                          both_sig <- sum(tmp[,i] & tmp[,j], na.rm=TRUE)
-                          either_sig <- sum(tmp[,i] | tmp[,j], na.rm=TRUE)
-                          both_sig/either_sig  # similarity
-                        }))
+    matrices[["cormat_est"]] <- cor(sumstat_matrix$est, use = "pairwise.complete.obs", method = "pearson") # union
+    matrices[["cormat_stat"]] <- cor(sumstat_matrix$stat, use = "pairwise.complete.obs", method = "pearson") # union
+    
+    ##################################################################
+    # Calculate between-pipeline jaccard of significant associations #
+    ##################################################################
+    
+    # Jaccard of significant findings (padj < p_thres) 
+    sumstat_matrix[["sig"]] <- df_union %>%
+      mutate(significant = padj < p_thres) %>%
+      select(genus, pipeline, significant) %>%
+      pivot_wider(names_from = pipeline, values_from = significant) %>%
+      column_to_rownames("genus")
 
-      rownames(matrices[["sigoverlap_pairs"]]) <- colnames(matrices[["sigoverlap_pairs"]]) <- colnames(mat)
+    # Overlap between all genera (considered n.s. if not tested) >> union set
+    mat <- sumstat_matrix[["sig"]]
+    matrices[["jaccard"]] <- outer(1:ncol(mat), 1:ncol(mat), 
+                      Vectorize(function(i,j) {
+                        both_sig <- sum(mat[,i] & mat[,j], na.rm=TRUE)
+                        either_sig <- sum(mat[,i] | mat[,j], na.rm=TRUE)
+                        both_sig/either_sig  # similarity
+                      }))
 
-      all_mats[[d]][[c]] <- matrices # All correlation and jaccard matrices
+    rownames(matrices[["jaccard"]]) <- colnames(matrices[["jaccard"]]) <- colnames(mat)
 
-      ##########################################################
-      # Calculate summary statistics and add to stats_dataset  #
-      ##########################################################
+    # Check overlap between pairwise-tested >> intersection set
+    matrices[["jaccard_intersection"]] <- outer(1:ncol(mat), 1:ncol(mat), 
+                      Vectorize(function(i,j) {
+                        tmp <- mat[(!is.na(mat[,i]) & !is.na(mat[,j])),]
+                        both_sig <- sum(tmp[,i] & tmp[,j], na.rm=TRUE)
+                        either_sig <- sum(tmp[,i] | tmp[,j], na.rm=TRUE)
+                        both_sig/either_sig  # similarity
+                      }))
 
-      for (var in c("cormat_est", "cormat_stat", "sigoverlap")) {
-        mat <- matrices[[var]]
-        diag(mat) <- NA
+    rownames(matrices[["jaccard_intersection"]]) <- colnames(matrices[["jaccard_intersection"]]) <- colnames(mat)
 
-        mat_pairs <- matrices[[paste0(var, "_pairs")]]
-        diag(mat_pairs) <- NA
+    all_mats[[d]][[c]] <- matrices # All correlation and jaccard matrices
 
-        # Remove pipeline=="Expected" from matrix (should not weigh into the between-pipeline average)
-        if ("Expected" %in% colnames(mat)) {
-          mat <- data.frame(mat) %>% 
-            select(-Expected) %>%
-            rownames_to_column(var = "pipeline") %>%
-            filter(!pipeline %in% "Expected") %>%
-            column_to_rownames(var = "pipeline")
+    ##########################################################
+    # Calculate summary statistics and add to stats_dataset  #
+    ##########################################################
 
-          mat_pairs <- data.frame(mat_pairs) %>% 
-            select(-Expected) %>%
-            rownames_to_column(var = "pipeline") %>%
-            filter(!pipeline %in% "Expected") %>%
-            column_to_rownames(var = "pipeline")
-        }
+    for (var in c("cormat_est", "cormat_stat", "jaccard")) {
+      # union
+      mat <- matrices[[var]]
+      diag(mat) <- NA
 
-        df_toadd <- data.frame(pipeline = colnames(mat),
-                              avg = rowMeans(mat, na.rm=TRUE),
-                              avg_pairs=rowMeans(mat_pairs, na.rm=TRUE))
-        
-        base <- case_when(grepl("est", var) ~ "est",
-                          grepl("stat", var) ~ "stat",
-                          grepl("sigoverlap", var) ~ "overlap")
+      # Intersection
+      mat_pairs <- matrices[[paste0(var, "_intersection")]]
+      diag(mat_pairs) <- NA
 
-        colnames(df_toadd) <- c("pipeline",
-                                paste0("da_", base, "_ave_", m, c),
-                                paste0("da_", base, "_pairs_ave_",m, c))
-        
-        stats_dataset[[d]] <- stats_dataset[[d]] %>% 
-          dplyr::left_join(., df_toadd, by = "pipeline")
+      # Remove pipeline=="Expected" from matrix (should not weigh into the between-pipeline average)
+      if ("Expected" %in% colnames(mat)) {
+        mat <- data.frame(mat) %>% 
+          select(-Expected) %>%
+          rownames_to_column(var = "pipeline") %>%
+          filter(!pipeline %in% "Expected") %>%
+          column_to_rownames(var = "pipeline")
 
+        # Intersection
+        mat_pairs <- data.frame(mat_pairs) %>% 
+          select(-Expected) %>%
+          rownames_to_column(var = "pipeline") %>%
+          filter(!pipeline %in% "Expected") %>%
+          column_to_rownames(var = "pipeline")
       }
 
-      # For simulated datasets, also add the correlation with the expected associations 
-      if (d %in% sims & !c %in% "def") {
-        for (var in c("cormat_est", "cormat_stat", "sigoverlap")) {
-          mat <- matrices[[var]] %>% data.frame() %>% 
-            select(Expected) %>% 
-            rownames_to_column(var = "pipeline") %>% 
-            filter(!pipeline %in% "Expected")
-
-          mat_pairs <- matrices[[paste0(var, "_pairs")]] %>% data.frame() %>% 
-            select(Expected) %>% 
-            rownames_to_column(var = "pipeline") %>% 
-            filter(!pipeline %in% "Expected")
-
-          df_toadd <- mat %>% 
-            dplyr::left_join(., mat_pairs, by = "pipeline")
-          
-          base <- case_when(grepl("est", var) ~ "est",
-                            grepl("stat", var) ~ "stat",
-                            grepl("sigoverlap", var) ~ "overlap")
-
-          colnames(df_toadd) <- c("pipeline",
-                                  paste0("da_", base, "_exp_", m, c),
-                                  paste0("da_", base, "_pairs_exp_", m, c))
-          
-          stats_dataset[[d]] <- stats_dataset[[d]] %>% 
-            dplyr::left_join(., df_toadd, by = "pipeline")
-        }
-      }
-
-      ##############################################################
-      # Extract the proportion of pipelines with sig associations  #
-      ##############################################################
-
-      # genera_anysig <- df %>% filter(padj < p_thres) %>% pull(genus) %>% unique()
-      # df_anysig <- df %>% filter(genus %in% genera_anysig)
+      df_toadd <- data.frame(pipeline = colnames(mat),
+                            avg = rowMeans(mat, na.rm=TRUE),
+                            avg_pairs=rowMeans(mat_pairs, na.rm=TRUE))
       
-      npipeline <- sum(!unique(df$pipeline) %in% "Expected")
+      base <- case_when(grepl("est", var) ~ "corest",
+                        grepl("stat", var) ~ "corstat",
+                        grepl("jaccard", var) ~ "jaccard")
 
-      # How often is each genus called significant (count, proportion by tested, proportion by total pipelines)
-      sigcount <- df_complete %>% 
-        filter(!pipeline %in% "Expected") %>% 
-        group_by(genus) %>% 
-        summarize(n_tested = n(), n_tot=npipeline, n_sig = sum(padj < p_thres)) %>%
-        mutate(prop_sig_tested = n_sig/n_tested,
-              prop_sig = n_sig/n_tot)
-
-      df <- df %>% 
-        dplyr::left_join(., sigcount, by = "genus") %>% 
-        mutate(propsig_cat = case_when(
-              prop_sig >= 1 ~ "100%",
-              prop_sig >= 0.75 ~ "75-99%",
-              prop_sig >= 0.50 ~ "50-74%",
-              prop_sig >= 0.25 ~ "25-49%",
-              TRUE ~ "0-24%")) %>%
-        mutate(propsig_cat = factor(propsig_cat, levels = c("100%", "75-99%", "50-74%", "25-49%", "0-24%"))) %>%
-        mutate(genus_old = genus) %>%
-        mutate(genus = gsub("X\\.", "[", genus_old)) %>%
-        mutate(genus = gsub("\\._", "]_", genus)) %>%
-        mutate(genus = gsub("\\.", "-", genus))
-
-      abs <- readRDS(paste0(output_path, "abundance_distributions.rds"))[[d]][[c]] %>%
-            rownames_to_column(var = "genus") %>%
-            mutate(genus = gsub("\\.\\.+\\d+", "", genus)) 
-            
-      df <- df %>% 
-        dplyr::left_join(., abs, by = c("pipeline", "genus"))          
-
-      all_df[[d]][[c]] <- df # all summarystats + derivatives (how often tested, how often significant, average abundance etc. )
-
-      # Create a proportion table (0-24, 25-49, 50-74, 75-99, 100) and add frequencies to stats_dataset
-      df_toadd <- df %>% 
-        filter(padj < p_thres) %>%
-        mutate(pipeline = factor(pipeline, levels = pipelines)) %>% 
-        group_by(pipeline, propsig_cat) %>%
-        summarize(n = n(), .groups="drop") %>%
-        complete(pipeline, propsig_cat, fill = list(n = 0)) %>%
-        filter(!pipeline %in% c("Expected", "eDNAFlow")) %>% 
-        group_by(pipeline) %>% 
-        mutate(prop = n / sum(n)) %>%
-        select(-n) %>%
-        pivot_wider(id_cols = pipeline, names_from = propsig_cat, values_from = prop)
+      colnames(df_toadd) <- c("pipeline",
+                              paste0("da_", base, "_ave_", c),
+                              paste0("da_", base, "_intersection_ave_", c))
       
-      colnames(df_toadd) <- c("pipeline", paste0(c("da_sig100", "da_sig5074", "da_sig7599", "da_sig2549", "da_sig024"), "_",m, c))
-
       stats_dataset[[d]] <- stats_dataset[[d]] %>% 
         dplyr::left_join(., df_toadd, by = "pipeline")
 
     }
+
+    # For simulated datasets, also add the correlation with the expected associations 
+    if (d %in% sims & !c %in% "def") {
+      for (var in c("cormat_est", "cormat_stat", "jaccard")) {
+        mat <- matrices[[var]] %>% data.frame() %>% 
+          select(Expected) %>% 
+          rownames_to_column(var = "pipeline") %>% 
+          filter(!pipeline %in% "Expected")
+
+        mat_pairs <- matrices[[paste0(var, "_intersection")]] %>% data.frame() %>% 
+          select(Expected) %>% 
+          rownames_to_column(var = "pipeline") %>% 
+          filter(!pipeline %in% "Expected")
+
+        df_toadd <- mat %>% 
+          dplyr::left_join(., mat_pairs, by = "pipeline")
+        
+        base <- case_when(grepl("est", var) ~ "corest",
+                          grepl("stat", var) ~ "corstat",
+                          grepl("jaccard", var) ~ "jaccard")
+
+        colnames(df_toadd) <- c("pipeline",
+                                paste0("da_", base, "_exp_", c),
+                                paste0("da_", base, "_intersection_exp_", c))
+        
+        stats_dataset[[d]] <- stats_dataset[[d]] %>% 
+          dplyr::left_join(., df_toadd, by = "pipeline")
+      }
+    }
+
+    ##############################################################
+    # Extract the proportion of pipelines with sig associations  #
+    ##############################################################
+    
+    npipeline <- sum(!unique(df$pipeline) %in% "Expected")
+
+    # How often is each genus called significant (count, proportion by tested, proportion by total pipelines)
+    sigcount <- df_union %>% 
+      filter(!pipeline %in% "Expected") %>% 
+      group_by(genus) %>% 
+      summarize(n_tested = n(), n_tot=npipeline, n_sig = sum(padj < p_thres)) %>%
+      mutate(prop_sig_tested = n_sig/n_tested,
+            prop_sig = n_sig/n_tot)
+
+    df <- df %>% 
+      dplyr::left_join(., sigcount, by = "genus") %>% 
+      mutate(propsig_cat = case_when(
+            prop_sig >= 1 ~ "100%",
+            prop_sig >= 0.75 ~ "75-99%",
+            prop_sig >= 0.50 ~ "50-74%",
+            prop_sig >= 0.25 ~ "25-49%",
+            TRUE ~ "0-24%")) %>%
+      mutate(propsig_cat = factor(propsig_cat, levels = c("100%", "75-99%", "50-74%", "25-49%", "0-24%"))) %>%
+      mutate(genus_old = genus) %>%
+      mutate(genus = gsub("X\\.", "[", genus_old)) %>%
+      mutate(genus = gsub("\\._", "]_", genus)) %>%
+      mutate(genus = gsub("\\.", "-", genus))
+
+    abs <- readRDS(paste0(output_path, "abundance_distributions.rds"))[[d]][[c]] %>%
+          rownames_to_column(var = "genus") %>%
+          mutate(genus = gsub("\\.\\.+\\d+", "", genus)) 
+          
+    df <- df %>% 
+      dplyr::left_join(., abs, by = c("pipeline", "genus"))          
+
+    all_df[[d]][[c]] <- df # all summarystats + derivatives (how often tested, how often significant, average abundance etc. )
+
+    # Create a proportion table (0-24, 25-49, 50-74, 75-99, 100) and add frequencies to stats_dataset
+    df_toadd <- df %>% 
+      filter(padj < p_thres) %>%
+      mutate(pipeline = factor(pipeline, levels = pipelines)) %>% 
+      group_by(pipeline, propsig_cat) %>%
+      summarize(n = n(), .groups="drop") %>%
+      complete(pipeline, propsig_cat, fill = list(n = 0)) %>%
+      filter(!pipeline %in% c("Expected", "eDNAFlow")) %>% 
+      group_by(pipeline) %>% 
+      mutate(prop = n / sum(n)) %>%
+      select(-n) %>%
+      pivot_wider(id_cols = pipeline, names_from = propsig_cat, values_from = prop)
+    
+    colnames(df_toadd) <- c("pipeline", paste0(c("da_sig100", "da_sig5074", "da_sig7599", "da_sig2549", "da_sig024"), "_", c))
+
+    stats_dataset[[d]] <- stats_dataset[[d]] %>% 
+      dplyr::left_join(., df_toadd, by = "pipeline")
+
   }
 }
-
 
 saveRDS(all_mats, file = paste0(output_path, "da_corstats.rds"))
 saveRDS(all_df, file = paste0(output_path, "da_probsig.rds"))
 saveRDS(stats_dataset, file = paste0(output_path, "stats_dataset_picrust_wrecall_wprecision_genus_perctpfp_picrustrecall_mds_perm_cor_alpha2_beta_da.rds"))
 
+jaccard_correlation_genusstat <- all_mats 
+get_list_names(jaccard_correlation_genusstat) %>% print()
+
+save(jaccard_correlation_genusstat, file = paste0(output_path, "jaccard_correlation_genusstat.RData"))
+
 ```
 
 # Recall and precision for DA 
-```{r da_recall_precision, eval=FALSE}
+```{r da_recall_precision, eval=TRUE,include=TRUE}
 
 stats_dataset <- readRDS(file = paste0(output_path, "stats_dataset_picrust_wrecall_wprecision_genus_perctpfp_picrustrecall_mds_perm_cor_alpha2_beta_da.rds"))
 da_stats <- readRDS(file = paste0(output_path, "differential_abundance_stats.rds"))
+df <- da_stats$df 
 
-for (m in c("", "mpred_")) {
-  if (m %in% "mpred_") {
-    df <- da_stats$df2 # models with microbiome as predictor
-  } else {
-    df <- da_stats$df # models with microbiome as outcome
-  }  
+# List of expected genera
+exp_gen <- df %>% 
+  filter(dataset %in% "miseq_v4_sim") %>% 
+  filter(pipeline %in% "Expected") %>% 
+  filter(padj < 0.05) %>%
+  pull(genus) %>% unique()
 
-  # List of expected genera
-  exp_gen <- df %>% 
-    filter(dataset %in% "miseq_v4_sim") %>% 
-    filter(pipeline %in% "Expected") %>% 
-    filter(padj < 0.05) %>%
-    pull(genus) %>% unique()
+# P-value threshold
+p_thres <- 0.05
 
-  # P-value threshold
-  p_thres <- 0.05
+# df to add TP, FP, FN associated genera
+fpfn <- data.frame(dataset = character(),
+                  classifier = character(),
+                  pipeline = character(),
+                  genus = character(),
+                  status = character())
 
-  # df to add TP, FP, FN associated genera
-  fpfn <- data.frame(dataset = character(),
-                    classifier = character(),
-                    pipeline = character(),
-                    genus = character(),
-                    status = character())
+# Calculate precision/recall
+precision_recall <- lapply(sims, function(d) {
+  lapply(classifiers, function(c) {
 
-  # Calculate precision/recall
-  precision_recall <- lapply(sims, function(d) {
-    lapply(classifiers, function(c) {
-
-      df_tmp <- df %>% 
-        filter(!pipeline %in% "Expected") %>% 
-        filter(dataset == d, classifier == c) %>%
-        filter(padj < p_thres) %>% 
-        mutate(true_da = ifelse(genus %in% exp_gen, TRUE, FALSE),
-              detected_da = padj < p_thres)
-      
-      precision_recall <- lapply(unique(df_tmp$pipeline), function(pip) {
-        df_sub <- df_tmp %>%
-          filter(pipeline == pip)
+    df_tmp <- df %>% 
+      filter(!pipeline %in% "Expected") %>% 
+      filter(dataset == d, classifier == c) %>%
+      filter(padj < p_thres) %>% 
+      mutate(true_da = ifelse(genus %in% exp_gen, TRUE, FALSE),
+            detected_da = padj < p_thres)
     
-        TP <- sum(df_sub$true_da == TRUE & df_sub$detected_da == TRUE, na.rm=TRUE)
-        FP <- sum(df_sub$true_da == FALSE & df_sub$detected_da == TRUE, na.rm=TRUE)
-        FN <- sum(!exp_gen %in% df_sub$genus) 
-        
-        precision <- ifelse((TP + FP) > 0, TP / (TP + FP), NA)
-        recall <- ifelse((TP + FN) > 0, TP / (TP + FN), NA)
+    precision_recall <- lapply(unique(df_tmp$pipeline), function(pip) {
+      df_sub <- df_tmp %>%
+        filter(pipeline == pip)
+  
+      TP <- sum(df_sub$true_da == TRUE & df_sub$detected_da == TRUE, na.rm=TRUE)
+      FP <- sum(df_sub$true_da == FALSE & df_sub$detected_da == TRUE, na.rm=TRUE)
+      FN <- sum(!exp_gen %in% df_sub$genus) 
+      
+      precision <- ifelse((TP + FP) > 0, TP / (TP + FP), NA)
+      recall <- ifelse((TP + FN) > 0, TP / (TP + FN), NA)
 
-        FP_gen <- df_sub$genus[df_sub$true_da == FALSE & df_sub$detected_da == TRUE]
-        FN_gen <- exp_gen[!exp_gen %in% df_sub$genus]
-        TP_gen <- df_sub$genus[df_sub$true_da == TRUE & df_sub$detected_da == TRUE]
+      FP_gen <- df_sub$genus[df_sub$true_da == FALSE & df_sub$detected_da == TRUE]
+      FN_gen <- exp_gen[!exp_gen %in% df_sub$genus]
+      TP_gen <- df_sub$genus[df_sub$true_da == TRUE & df_sub$detected_da == TRUE]
 
-        fpfn <<- fpfn %>%
-          bind_rows(tibble(dataset = d, classifier = c, pipeline = pip, genus = FP_gen, status = "FP")) %>%
-          bind_rows(tibble(dataset = d, classifier = c, pipeline = pip, genus = FN_gen, status = "FN")) %>%
-          bind_rows(tibble(dataset = d, classifier = c, pipeline = pip, genus = TP_gen, status = "TP"))
+      fpfn <<- fpfn %>%
+        bind_rows(tibble(dataset = d, classifier = c, pipeline = pip, genus = FP_gen, status = "FP")) %>%
+        bind_rows(tibble(dataset = d, classifier = c, pipeline = pip, genus = FN_gen, status = "FN")) %>%
+        bind_rows(tibble(dataset = d, classifier = c, pipeline = pip, genus = TP_gen, status = "TP"))
 
-        data.frame(pipeline = pip,
-                  precision = precision,
-                  recall = recall,
-                  dataset = d,
-                  classifier = c)
+      data.frame(pipeline = pip,
+                precision = precision,
+                recall = recall,
+                dataset = d,
+                classifier = c)
 
-      }) %>% bind_rows()
     }) %>% bind_rows()
   }) %>% bind_rows()
+}) %>% bind_rows()
 
-  # Add precision and recall to stats_dataset for plotting later 
-  for (d in sims) {
-    tmp <- precision_recall %>%
-      filter(dataset %in% d) %>%
-      select(-dataset) %>%
-      pivot_wider(
-        names_from = classifier,
-        values_from = c(precision, recall),
-        names_glue = "da_{.value}_{m}{classifier}"
-      )
+# Add precision and recall to stats_dataset for plotting later 
+for (d in sims) {
+  tmp <- precision_recall %>%
+    filter(dataset %in% d) %>%
+    select(-dataset) %>%
+    pivot_wider(
+      names_from = classifier,
+      values_from = c(precision, recall),
+      names_glue = "da_{.value}_{classifier}"
+    )
 
-    stats_dataset[[d]] <- stats_dataset[[d]] %>%
-      dplyr::left_join(., tmp, by = "pipeline")
-  }
+  stats_dataset[[d]] <- stats_dataset[[d]] %>%
+    dplyr::left_join(., tmp, by = "pipeline")
 }
 
 saveRDS(stats_dataset, file = paste0(output_path, "stats_dataset_picrust_wrecall_wprecision_genus_perctpfp_picrustrecall_mds_perm_cor_alpha2_beta_da2.rds"))
 
 ``` 
-
 
 # Overall performance
 ## Z-score benchmark metrics
@@ -3960,7 +3570,7 @@ Here we z-score all relevant benchmark metrics into 4 main categories:
  
 Moverover, we create an overall performance score capturing performance across datasets and feature levels 
 
-```{r zscores, eval=FALSE}
+```{r zscores, eval=FALSE,include=TRUE}
 
 stats_dataset <- readRDS(file = paste0(output_path, "stats_dataset_picrust_wrecall_wprecision_genus_perctpfp_picrustrecall_mds_perm_cor_alpha2_beta_da2.rds"))
 inv <- c("fr_jaccard", "sa_alpha", "sa_beta") # Variables to inverse (higher > worse to higher > better)
@@ -3972,7 +3582,7 @@ for (d in datasets$datasets) {
   if (d %in% reals) {
     tmp <-  stats_dataset[[d]] %>%
       select(pipeline,
-            fr_jaccard_asv = distave_jaccard_asv249, # jaccard dissimilarity 
+            fr_jaccard_asv = distave_jaccard_asv249, # jaccard dissimilarity (higher is worse)
             fr_jaccard_q2 = distave_jaccard_q2,
             fr_jaccard_idtaxa = distave_jaccard_idtaxa,
             aa_cor_clr_asv = cor_clr_asv249,  # correlation clr
@@ -3982,10 +3592,10 @@ for (d in datasets$datasets) {
             sa_alpha_observed_ave = alpha_observed_ave,# alpha effect sizes
             sa_beta_aitchison_ave = beta_aitchison_ave,
             sa_beta_jaccard_ave = beta_jaccard_ave,
-            sa_cor_ave_q2 = da_est_ave_q2,
-            sa_cor_ave_idtaxa = da_est_ave_idtaxa, 
-            sr_jaccard_q2 = da_overlap_ave_q2, # da jaccard dissimilarity 
-            sr_jaccard_idtaxa = da_overlap_ave_idtaxa) 
+            sa_cor_ave_q2 = da_corest_ave_q2,
+            sa_cor_ave_idtaxa = da_corest_ave_idtaxa, 
+            sr_jaccard_q2 = da_jaccard_ave_q2, # da jaccard similarity (higher = better)
+            sr_jaccard_idtaxa = da_jaccard_ave_idtaxa) 
   } else {
     tmp <- data.frame(pipeline = stats_dataset[[d]]$pipeline)
   }
@@ -4024,8 +3634,8 @@ for (d in datasets$datasets) {
           sa_alpha_observed_exp = alpha_observed_exp,
           sa_beta_aitchison_exp = beta_aitchison_exp,
           sa_beta_jaccard_exp = beta_jaccard_exp,
-          sa_cor_exp_q2 = da_est_exp_q2,
-          sa_cor_exp_idtaxa = da_est_exp_idtaxa,
+          sa_cor_exp_q2 = da_corest_exp_q2,
+          sa_cor_exp_idtaxa = da_corest_exp_idtaxa,
           # recall (1)
           sr_recall_q2 = da_recall_q2,
           sr_recall_idtaxa = da_recall_idtaxa,
@@ -4183,227 +3793,8 @@ saveRDS(stats_dataset, file = paste0(output_path, "stats_dataset_picrust_wrecall
 
 ```
 
-No IDTAXA
-```{r zscores2, eval=FALSE}
-
-stats_dataset <- readRDS(file = paste0(output_path, "stats_dataset_picrust_wrecall_wprecision_genus_perctpfp_picrustrecall_mds_perm_cor_alpha2_beta_da2.rds"))
-inv <- c("fr_jaccard", "sa_alpha", "sa_beta") # Variables to inverse (higher > worse to higher > better)
-
-stats_comb <- list() # list to store all z-scored metrics
-
-for (d in datasets$datasets) {
-  # Metric specific to real datasets
-  if (d %in% reals) {
-    tmp <-  stats_dataset[[d]] %>%
-      select(pipeline,
-            fr_jaccard_asv = distave_jaccard_asv249, # jaccard dissimilarity 
-            fr_jaccard_q2 = distave_jaccard_q2,
-            # fr_jaccard_idtaxa = distave_jaccard_idtaxa,
-            aa_cor_clr_asv = cor_clr_asv249,  # correlation clr
-            aa_cor_clr_q2 = cor_clr_q2, 
-            # aa_cor_clr_idtaxa = cor_clr_idtaxa,
-            sa_alpha_shannon_ave = alpha_shannon_ave,# alpha effect sizes
-            sa_alpha_observed_ave = alpha_observed_ave,# alpha effect sizes
-            sa_beta_aitchison_ave = beta_aitchison_ave,
-            sa_beta_jaccard_ave = beta_jaccard_ave,
-            sa_cor_ave_q2 = da_est_ave_q2,
-            # sa_cor_ave_idtaxa = da_est_ave_idtaxa, 
-            sr_jaccard_q2 = da_overlap_ave_q2)# da jaccard dissimilarity 
-            # sr_jaccard_idtaxa = da_overlap_ave_idtaxa) 
-  } else {
-    tmp <- data.frame(pipeline = stats_dataset[[d]]$pipeline)
-  }
-
-  # Metric specific to ground-truth datasets (mock & sim)
-  if (d %in% c(mocks, sims)) {
-    tmp1 <- stats_dataset[[d]] %>% 
-        select(pipeline,
-          # recall (1)
-          fr_recall_asv = recallrate,
-          fr_recall_q2 = recallrate_genus_q2,
-          # fr_recall_idtaxa = recallrate_genus_idtaxa,
-          # Precision (1)
-          fr_precision_asv = precisionrate,
-          fr_precision_q2 = precisionrate_genus_q2,
-          # fr_precision_idtaxa = precisionrate_genus_idtaxa,
-          # cor to exp
-          aa_cor_clr_exp_asv = cor_clr_exp_asv, 
-          aa_cor_clr_exp_q2 = cor_clr_exp_q2
-          # aa_cor_clr_exp_idtaxa = cor_clr_exp_idtaxa
-        )
-
-      tmp1 <- tmp1 %>%  
-        mutate(fr_f1_asv = 2 * (fr_precision_asv * fr_recall_asv) / (fr_precision_asv + fr_recall_asv),
-               fr_f1_q2 = 2 * (fr_precision_q2 * fr_recall_q2) / (fr_precision_q2 + fr_recall_q2))
-              #  fr_f1_idtaxa = 2 * (fr_precision_idtaxa * fr_recall_idtaxa) / (fr_precision_idtaxa + fr_recall_idtaxa))
-  } else {
-    tmp1 <- data.frame(pipeline = stats_dataset[[d]]$pipeline)
-  }
-
-  # Metric specific to simulated datasets
-  if (d %in% c(sims)) {
-    tmp2 <- stats_dataset[[d]] %>% 
-        select(pipeline,
-          sa_alpha_shannon_exp = alpha_shannon_exp,
-          sa_alpha_observed_exp = alpha_observed_exp,
-          sa_beta_aitchison_exp = beta_aitchison_exp,
-          sa_beta_jaccard_exp = beta_jaccard_exp,
-          sa_cor_exp_q2 = da_est_exp_q2,
-          # sa_cor_exp_idtaxa = da_est_exp_idtaxa,
-          # recall (1)
-          sr_recall_q2 = da_recall_q2,
-          # sr_recall_idtaxa = da_recall_idtaxa,
-          # Precision (1)
-          sr_precision_q2 = da_precision_q2
-          # sr_precision_idtaxa = da_precision_idtaxa,
-        )
-
-    tmp2 <- tmp2 %>%  
-        mutate(sr_f1_q2 = 2 * (sr_precision_q2 * sr_recall_q2) / (sr_precision_q2 + sr_recall_q2))
-              #  sr_f1_idtaxa = 2 * (sr_precision_idtaxa * sr_recall_idtaxa) / (sr_precision_idtaxa + sr_recall_idtaxa))
-  } else {
-    tmp2 <- data.frame(pipeline = stats_dataset[[d]]$pipeline)
-  }
-
-  tmp <- tmp %>% 
-    dplyr::left_join(., tmp1, by = "pipeline") %>%
-    dplyr::left_join(., tmp2, by = "pipeline") %>%
-    filter(!pipeline %in% c("LotuS2_otu"))
-  
-  tmp_scaled <- tmp %>% 
-    mutate(across(starts_with(c("sa_alpha", "sa_beta")), ~ abs(.x))) %>% # pos and neg deviations should be treated the same here
-    mutate(across(where(is.numeric), ~ as.numeric(scale(.x)), .names = "{.col}")) %>%
-    mutate(across(starts_with(inv), ~ -.x)) # flip sign so higher = better
-  
-  tmp_ranked <- tmp_scaled %>%
-    mutate(across(
-      where(is.numeric),
-      ~ { r <- rank(.x, ties.method = "min", na.last = "keep")
-          ifelse(is.na(.x), NA_real_, r) },
-      .names = "{.col}"
-    ))
-
-  # Z-scoring across (instead of within) feature level to assess differences between ASV and genus 
-  tmp_feat <- tmp %>% 
-    pivot_longer(cols = -pipeline, names_to="variable", values_to="value") %>%
-    mutate(vtype = sapply(str_split(variable, "_"), head, 1)) %>% 
-    filter(!vtype %in% c("sr", "sa")) %>% 
-    mutate(classifier = sapply(str_split(variable, "_"), tail, 1)) %>%
-    mutate(featlevel = ifelse(classifier %in% "asv", "ASV", "Genus"))
-
-  feat_scaled <- tmp_feat %>% 
-    mutate(variable = variable %>% 
-           str_remove(paste0("_", classifier))) %>%
-    select(-c(vtype, classifier)) %>%
-    group_by(pipeline, variable, featlevel) %>% 
-    summarize(value = mean(value, na.rm=TRUE), .groups="drop") %>% 
-    pivot_wider(id_cols = c(pipeline, featlevel), names_from="variable", values_from="value") %>%
-    mutate(across(where(is.numeric), ~ as.numeric(scale(.x)), .names = "{.col}")) %>%
-    mutate(across(starts_with(inv), ~ -.x)) # flip sign so higher = better
-
-  # Z-scoring across (instead of within) classifier to assess differences between classifiers 
-  class_scaled <- tmp_feat %>% 
-    filter(!featlevel %in% "ASV") %>% 
-    mutate(variable = variable %>% 
-           str_remove(paste0("_", classifier))) %>%
-    select(-c(vtype, featlevel)) %>%
-    pivot_wider(id_cols = c(pipeline, classifier), names_from="variable", values_from="value") %>%
-    mutate(across(where(is.numeric), ~ as.numeric(scale(.x)), .names = "{.col}")) %>%
-    mutate(across(starts_with(inv), ~ -.x)) # flip sign so higher = better
-
-  stats_comb[["raw"]][[d]] <- tmp
-  stats_comb[["zscore"]][[d]] <- tmp_scaled
-  stats_comb[["ranked"]][[d]] <- tmp_ranked
-  stats_comb[["feat_zscore"]][[d]] <- feat_scaled
-  stats_comb[["classifier_zscore"]][[d]] <- class_scaled
-
-
-} 
-
-# Compile all transformed metrics into one dataframe
-df_all <- lapply(datasets$dataset, function(d) {  # Combine metrics from different datasets
-  df <- stats_comb[["zscore"]][[d]] %>%
-    pivot_longer(-pipeline, names_to = "variable", values_to = "value") %>% 
-    mutate(group = sapply(str_split(variable, "_"), head, 1)) %>%
-    mutate(dataset = d)
-}) %>% bind_rows() %>%
-  # complete(pipeline, variable, dataset, fill = list(value = NA)) %>%
-  # Categorize data types (mock, sim, real)
-  mutate(dtype = case_when(dataset %in% mocks ~ "Mock",
-                           dataset %in% sims ~ "Simulation",
-                           dataset %in% reals ~ "Real")) %>%
-  mutate(dtype = factor(dtype, levels = c("Mock", "Simulation", "Real")),
-         vtype = sapply(str_split(variable, "_"), head, 1), # variable type (fr, aa, sr, sa)
-         ctype = case_when(grepl("q2", variable) ~ "q2", # feature levels * classifiers (q2, idtaxa, asv or statistics) 
-                           grepl("asv", variable) ~ "asv",
-                           TRUE ~ "stats")) %>%
-  mutate(classifier = case_when(grepl("_q2", variable) ~ "q2")) %>%
-  mutate(featlevel = case_when(ctype %in% c("q2") ~ "Genus", # feature-level (Genus, ASV, stats)
-                               ctype %in% "asv" ~ "ASV",
-                               ctype %in% "stats" ~ "Statistics")) 
-
-stats_comb[["all"]] <- df_all # add to big list for later access 
-
-# Calculate the overall score
-d_performance <- df_all %>% 
-  filter(!grepl("recall|precision", variable)) %>% # remove recall/precision because they are combined into F1 score to avoid cancelling out 
-  mutate(metric_base = variable %>% 
-           str_remove("_q2$")) %>% 
-  # Average across avs and genus level 
-  mutate(metric_base = metric_base %>% 
-           str_remove("_asv$")) %>% 
-  group_by(pipeline, dataset, metric_base) %>%
-  summarize(value = mean(value, na.rm = TRUE), .groups = "drop") %>%
-  mutate(metric_base = metric_base %>%
-           str_remove("_exp$") %>%
-           str_remove("_ave$")) %>%
-  # Average across alpha metrics (shannon, observed) and across beta metrics (aitchison, jaccard)
-  mutate(metric_base = metric_base %>%
-           str_remove("_exp$") %>%
-           str_remove("_ave$")) %>%
-  mutate(metric_base = metric_base %>%
-           str_replace("_alpha_shannon", "_alpha") %>%
-           str_replace("_alpha_observed", "_alpha") %>%
-           str_replace("_beta_jaccard", "_beta") %>%
-           str_replace("_beta_aitchison", "_beta")) %>% 
-  group_by(pipeline, dataset, metric_base) %>%
-  summarize(value = mean(value, na.rm = TRUE), .groups = "drop") %>%
-  # Average across metric groups (feature recovery (fr), abundance accuracy (aa), stats recovery (sr), stats accuracy (aa)
-  mutate(vtype = sapply(str_split(metric_base, "_"), head, 1)) %>% 
-  group_by(pipeline, dataset, vtype) %>%
-  summarize(value = mean(value, na.rm = TRUE), .groups = "drop") %>%
-  # Average by dataset
-  group_by(pipeline, dataset) %>%
-  summarize(value = mean(value, na.rm = TRUE), .groups = "drop")  
-
-# Calculate overall performance 
-overall_performance <- d_performance %>% 
-  filter(!pipeline %in% c("LotuS2_otu", "eDNAFlow")) %>% 
-  group_by(pipeline) %>% 
-  summarize(value = mean(value, na.rm = TRUE), .groups = "drop") %>%
-  arrange(value) 
-colnames(overall_performance)[2] <- "performance"
-
-# Add to stats_dataset 
-for (d in datasets$datasets) {
-  df_toadd <- d_performance %>% 
-    filter(dataset %in% d) %>%
-    select(-dataset, performance_dataset=value) %>%
-    dplyr::left_join(., overall_performance , by = "pipeline")
-
-  stats_dataset[[d]] <- stats_dataset[[d]] %>% 
-    dplyr::left_join(., df_toadd, by = "pipeline")
-}
-
-# Save
-saveRDS(stats_comb, file = paste0(output_path, "combined_performance.rds"))
-saveRDS(stats_dataset, file = paste0(output_path, "stats_dataset_picrust_wrecall_wprecision_genus_perctpfp_picrustrecall_mds_perm_cor_alpha2_beta_da2_z.rds"))
-
-```
-
-
 ## Ground-truth vs. Consensus associations
-```{r groundtruth, eval=FALSE}
+```{r groundtruth, eval=FALSE,include=TRUE}
 
 stats_dataset <- readRDS(file = paste0(output_path, "stats_dataset_picrust_wrecall_wprecision_genus_perctpfp_picrustrecall_mds_perm_cor_alpha2_beta_da2_z.rds"))
 
@@ -4426,11 +3817,11 @@ df <- lapply(sims, function(d) {
                            aitchison_ave = beta_aitchison_ave,
                            aitchison_exp = beta_aitchison_exp,
                            # DA Jaccard 
-                           dajaccard_ave = da_overlap_ave_q2,
-                           dajaccard_exp = da_overlap_exp_q2,
+                           dajaccard_ave = da_jaccard_ave_q2,
+                           dajaccard_exp = da_jaccard_exp_q2,
                            # DA Correlation
-                           dacor_ave = da_est_ave_q2,
-                           dacor_exp = da_est_exp_q2) %>%
+                           dacor_ave = da_corest_ave_q2,
+                           dacor_exp = da_corest_exp_q2) %>%
                           mutate(dataset=d) 
 }) %>% bind_rows %>%
   pivot_longer(cols=-c(pipeline, dataset), names_to="variable", values_to="values") %>%
@@ -4501,7 +3892,7 @@ df4 <- lapply(sims, function(d) {
                            dist_ave_asv = distave_jaccard_asv249,
                            dist_ave_q2 = distave_jaccard_q2,
                            # DA jaccard 
-                           dajaccard_stat = da_overlap_ave_q2) %>%
+                           dajaccard_stat = da_jaccard_ave_q2) %>%
      mutate(dataset=d) %>%
      mutate(dist_ave_asv = 1 - dist_ave_asv,
             dist_ave_q2 = 1 - dist_ave_q2) %>% 
@@ -4549,8 +3940,8 @@ for (lev in unique(df4$featlevel)) {
               CI = paste0(round(cor_pears_CI$conf.int[1], 3), "-", round(cor_pears_CI$conf.int[2], 3)))
 }
 
-cor_df # sim to sim
-cor_df3 # F1 to jacc_ave
+print(cor_df) # sim to sim
+print(cor_df3) # F1 to jacc_ave
 
 p1 <- cor_df2 %>% 
   ggplot(., aes(y = interaction(sim, real), x = cor_pearson)) +
@@ -4567,7 +3958,7 @@ ggsave(paste0(plot_path, "SFigure_consensus.pdf"), plot = p1, device = cairo_pdf
 # Effect of filtering
 ## Effect of filtering on ground-truth metrics 
 How does filtering affect recall and precision 
-```{r FN_abundance, eval=FALSE}
+```{r FN_abundance, eval=FALSE, include=TRUE}
 
 seq_length <- read_tsv("/projects/0/gs/danique/pipelines/int_results/seq_length.tsv") # for sequence length filter
 ab_stats <- list()
@@ -4805,11 +4196,8 @@ Filtering is ran in separate script: tse_filter.sh / tse_filter.R
 
 See tse_filter.sh / tse_filter.R 
 
-
-
 ## Algorithms Configuration 
-
-```{r pipeline_settings, eval=FALSE}
+```{r pipeline_settings, eval=FALSE,include=TRUE}
 
 stats_dataset <- readRDS(file = paste0(output_path, "stats_dataset_picrust_wrecall_wprecision_genus_perctpfp_picrustrecall_mds_perm_cor_alpha2_beta_da2_z.rds"))
 algorithms_df <- read_tsv(algorithms) %>% select(where(~ !all(is.na(.))))
@@ -4822,12 +4210,12 @@ df_ground <- lapply(c(mocks, sims), function(d) {
 }) %>% bind_rows()
 
 df_consensus <- lapply(reals, function(d) {
-  stats_dataset[[d]] %>% select(pipeline, jaccard_asv=distave_jaccard_asv249, jaccard_q2=distave_jaccard_q2, cor_clr_asv, cor_clr_q2, da_cor_q2=da_est_ave_q2, da_jaccard_q2=da_overlap_ave_q2) %>% 
+  stats_dataset[[d]] %>% select(pipeline, jaccard_asv=distave_jaccard_asv249, jaccard_q2=distave_jaccard_q2, cor_clr_asv, cor_clr_q2, da_cor_q2=da_corest_ave_q2, da_jaccard_q2=da_jacard_ave_q2) %>% 
       mutate(dataset = d)
 }) %>% bind_rows()
 
 df_sim <- lapply(sims, function(d) {
-  stats_dataset[[d]] %>% select(pipeline, da_cor_exp_q2=da_est_exp_q2, da_recall_q2, da_precision_q2) %>% 
+  stats_dataset[[d]] %>% select(pipeline, da_cor_exp_q2=da_corest_exp_q2, da_recall_q2, da_precision_q2) %>% 
       mutate(dataset = d)
 }) %>% bind_rows()
 
@@ -4896,7 +4284,6 @@ combined <- wrap_plots(pltlist, ncol = 1) +
 
 ggsave(paste0(plot_path, "test.pdf"), plot = combined, device = cairo_pdf, width = 16, height = 15)
 
-
 names_settings <- c("primer" = "Primer trimming",
                     "qc" = "Quality filtering",
                     "denoising" = "Denoising",
@@ -4935,116 +4322,21 @@ combined <- wrap_plots(pltlist, nrow = 1) +
 
 ggsave(paste0(plot_path, "SFigure_pipeline_settings.pdf"), plot = combined, device = cairo_pdf, width = 10, height = 3)
 
-
 ``` 
 
-
-
-```{r download_readouts, eval=FALSE}
-
-stats_dataset <- readRDS(file = paste0(output_path, "stats_dataset_picrust_wrecall_wprecision_genus_perctpfp_picrustrecall_mds_perm_cor_alpha2_beta_da2_z.rds"))
-
-# Create workbook and write each dataset to its own sheet
-wb <- createWorkbook()
-
-lapply(names(stats_dataset), function(d) {  
-  addWorksheet(wb, sheetName = titles_d[[d]])
-  writeData(wb, sheet = titles_d[[d]], x = stats_dataset[[d]])
-})
-
-saveWorkbook(wb, file = paste0(plot_path, "stats_dataset.xlsx"), overwrite = TRUE)
-
-
-df <- lapply(names(stats_dataset), function(d) {
-  stats_dataset[[d]] %>% 
-    mutate(dataset = d)
-}) %>% bind_rows()
-
-df %>% select(pipeline, dataset, cor_relabundance_asv249) %>%
-  group_by(dataset) %>%
-  summarize(avg = mean(cor_relabundance_asv249, na.rm=TRUE)) %>%
-  pull(avg) %>% mean()
-
-
-summary(df$cor_relabundance_asv249)
-
-```
-
-
-```{r old, include=FALSE, eval=FALSE}
+## Download all readouts for publication
+```{r download_readouts, eval=FALSE, include=TRUE}
 
 stats_dataset <- readRDS(file = paste0(output_path, "stats_dataset_picrust_wrecall_wprecision_genus_perctpfp_picrustrecall_mds_perm_cor_alpha2_beta_da2_z.rds"))
 
-
-# Get Real 
-df2 <- lapply(reals, function(d) {
-  stats_dataset[[d]] %>% select(pipeline,
-                           # jaccard 
-                           dist_ave_asv = distave_jaccard_asv249,
-                           dist_ave_q2 = distave_jaccard_q2,
-                           # Correlation
-                           cor_ave_asv = cor_clr_asv249,
-                           cor_ave_q2 = cor_clr_q2,
-                           # Shannon
-                           observed_ave = alpha_observed_ave,
-                           # aitchison
-                           aitchison_ave = beta_aitchison_ave,
-                           # DA Jaccard 
-                           dajaccard_ave = da_overlap_ave_q2,
-                           # DA Correlation
-                           dacor_ave = da_est_ave_q2) %>%
-                          mutate(dataset=d)
-}) %>% bind_rows %>%
-  pivot_longer(cols=-c(pipeline, dataset), names_to="variable", values_to="values") %>%
-  mutate(featlevel = case_when(grepl("_asv", variable) ~ "ASV",
-                   grepl("_q2", variable) ~ "Genus",
-                   TRUE ~ "Statistics")) %>%
-  mutate(reference = ifelse(grepl("exp", variable), "expected", "consensus")) %>% 
-  mutate(metric_base = variable %>% 
-                        str_remove("_asv") %>% 
-                        str_remove("_q2") %>%
-                        str_remove("_ave") %>% 
-                        str_remove("_exp"))
-
-df3 <- df %>% filter(reference %in% "expected") %>%
-  bind_rows(df2) %>% 
-  select(-variable)
-
-cor_df2 <- data.frame(var = character(), 
-                    featlevel = character(), 
-                    sim = character(),
-                    real = character(),
-                    cor_pearson = numeric())
-
-for (s in sims) {
-  for (r in reals) {
-    sub <- df3 %>% filter(dataset %in% c(s, r))
-    for (m in unique(df2$metric_base)) {
-      for (lev in unique(df2$featlevel)) {
-      
-        nvar <- sub %>% filter(metric_base %in% m, featlevel %in% lev) %>% nrow()
-        if (nvar == 0) next
-
-        sub2 <- sub %>% filter(metric_base %in% m, featlevel %in% lev) %>% 
-          select(pipeline, dataset, values, reference) %>% 
-          pivot_wider(id_cols=c(pipeline), values_from="values", names_from="reference")
-
-        cor_pears <- cor(sub2$consensus, sub2$expected, method="pearson", use = "pairwise.complete.obs")
-        
-        cor_df2 <- cor_df2 %>% 
-          add_row(var = m, 
-                  featlevel=lev,
-                  sim = s,
-                  real = r,
-                  cor_pearson = cor_pears)
-      }
-    }
-  }
-}
-
-cor_df2
-
-
-
+all_readouts <- stats_dataset 
+save(all_readouts, file = paste0(output_path, "all_readouts.RData"))
 
 ```
+
+```{r session_info, eval=FALSE}
+
+writeLines(capture.output(sessionInfo()), paste0(output_path, "R_sessionInfo.txt"))
+
+```
+
